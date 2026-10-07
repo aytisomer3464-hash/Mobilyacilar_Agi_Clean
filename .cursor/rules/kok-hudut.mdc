@@ -9,7 +9,7 @@ Yan kopya: asıl `Mobilyacılar_Agi` ve canlı `web.app` dokunulmaz.
 
 Çanta **4** araç: OCR ölçü, Fire ebatlama, **Mobilya İmalat Akıllı Reçete**, Tel çizim. 5. kapı, “Elle ölçü”, “Duvar giydir”, eski portal sayfası yok.
 
-Reçete sırası: zemin → duvar → mobilya. 1–2 program %90 soru-cevap + kilit; mühürsüz sonraki aşama yok. 3 (mobilya motoru) 1–2 kilitlenmeden yazılmaz; 3’te program bir tur çizer, sonra usta.
+Reçete sırası: zemin → duvar → mobilya. 1–2 program %90 soru-cevap + kilit; mühürsüz sonraki aşama yok. Mobilya hesap çekirdeği durur; yeni iş üzerine eklenir. Ayrıntı kök `.cursorrules`. 3’te program bir tur çizer, sonra usta.
 
 OCR: tarama → onay → bant → filtre (ekran) → WhatsApp (tüm dolap). RapidOCR + Gemini. `sunucu.py` `ocr_okuyucu` içinde. iframe yok.
 

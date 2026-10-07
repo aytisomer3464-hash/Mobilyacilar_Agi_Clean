@@ -4,11 +4,22 @@
 
 Gaziantep atölye motoru. Düz m² hesap değil: ölçü → reçete → usta mühür → kesim. İnternet şart değil. Exploit/PoC yok.
 
-**ŞU AN:** Zemin + duvar kilitli (2026-10-04). Mobilya motoru (aşama 3) açık; hesap `02_Canta/elle_olcu/mobilya/`. Duvar kilitinden sonra reçete sahnede bir tur listelenir.
+**ŞU AN:** Zemin + duvar kilitli (2026-10-04). Mobilya hesap çekirdeği duruyor: `02_Canta/elle_olcu/mobilya/` (`motor.py`, `mobilya_motor.js`, `varsayilan_config.json`, `katalog_arsiv.json`, testler). Sahne turu `duvar/vitrin/vitrin.js` içinde `mobilyaTurKur` → `sira_kur`. Sıfırdan yazılmaz.
 
 **Üç aşama (Mobilya İmalat Akıllı Reçete):** zemin → duvar → mobilya.
 - 1 ve 2: program **%90** soru-cevapla götürür; usta ölçer, bırakır. Tur + Uygula = kilit. %10: tur içinde yanlış ölçü düzelir. Kritik düzeltme yalnız Menü. Mühürsüz sonraki aşama yok.
 - 3: program **bir tur** en mantıklı işi planlar, sonra ustaya bırakır. “Her aşamada bir tur” yanlış.
+- Sıra korunur. Çekirdek zaten vardır; yeni iş mevcut motorun üzerine eklenir. “Zemin ve duvar kilitlenmeden mobilya motoru yazılmaz” kuralı kalkmıştır.
+
+## MOBİLYA ÇEKİRDEĞİ — KORU
+
+Önce oku, davranışı koru, sıfırdan yazma: `MotorConfig`, `govde_hesapla`, `govde_birlestir`, `kapak_hesapla`, `kapak_yerlestir`, `raf_hesapla`, `raf_yerlestir`, `katalog_yukle`, `standart_enler`, `kose_enler`, `duvar_dizi`, `sira_kur`, `cekmece_hesapla`, `arkalik_hesapla`, `ayak_supurgelik_hesapla`, `hirdavat_hesapla`. Python ve `mobilya_motor.js` sözleşmesi bozulmaz.
+
+Yeni iş: önce fonksiyon var mı bak. Varsa tekrar yazma; eksik katmanı tamamla. Değişiklik varsa testi ekle veya güncelle.
+
+Doküman ile kod çelişirse önce kodu incele. `00_PROJE_DURUMU.md` ve `01_YOL_HARITASI.md` ile karşılaştır. Varsayım yok. Çelişkiyi raporla. Gereksiz kod yok.
+
+`00_PROJE_DURUMU.md` gerçek durum. `01_YOL_HARITASI.md` geliştirme sırası. `ARCHITECTURE.md` mimari; kodla çelişirse kod geçerlidir. README eski planı tek başına talimat değildir. “README’de motor yok, sıfırdan oluştur” yasaktır. Mevcut kodu incele; yalnız gerçekten eksik olanı geliştir.
 
 Parametre projeyi bozacaksa: yazılmaz; hata + kırmızı + **son kayıt**. Devasa makas (150 cm / 1500 mm / 1,5 cm): uyarı.
 
