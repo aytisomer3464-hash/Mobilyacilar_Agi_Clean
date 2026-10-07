@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<script src="./vitrin_kapi.js"></script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Kesim OCR</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' fill='%23111'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css?v=temaA2">
+  <link rel="stylesheet" href="./kabuk.css?v=kabuk1">
+</head>
+<body>
+  <div class="telefon">
+  <main class="kapsayici">
+    <header class="ust">
+      <div class="ust-satir">
+        <a class="portal-don" href="/" title="Mobilyacılar Ağı">Ağ</a>
+        <h1>Kesim OCR</h1>
+        <div class="ust-sag">
+          <button id="fotoBtn" type="button" class="ayar-btn" hidden aria-pressed="false">Foto</button>
+          <button id="ayarBtn" type="button" class="ayar-btn" aria-expanded="false" aria-controls="ayarPanel">
+            Ayarlar
+          </button>
+        </div>
+      </div>
+      <ol class="adimlar" aria-label="İş adımları">
+        <li id="adim1" class="aktif">1 Fotoğraf</li>
+        <li id="adim2">2 Tara</li>
+        <li id="adim3">3 Onay</li>
+      </ol>
+      <p id="rehber" class="rehber">Kâğıdı düz tutup fotoğrafını çekin.</p>
+    </header>
+
+    <div id="ayarPanel" class="ayar-panel" hidden>
+      <p id="kotaSerit" class="kota-serit" role="status">Kota yükleniyor…</p>
+      <p id="katkiBildirim" class="katki" hidden></p>
+      <p id="lanAdresleri" class="lan"></p>
+      <p id="ogrenmeDurum" class="lan"></p>
+      <p id="havuzDurum" class="lan"></p>
+      <details id="havuzGecmis" class="havuz-kutu">
+        <summary>Havuz geçmişi</summary>
+        <p class="ipucu">Aynı kâğıdı parça adıyla arayın. Silmek yalnızca hafızayı düşürür; arşiv durur.</p>
+        <div class="havuz-ara-satir">
+          <input id="havuzAra" type="search" enterkeyhint="search" placeholder="Raf, M1…">
+          <button type="button" id="havuzAraBtn">Ara</button>
+        </div>
+        <ul id="havuzListe" class="havuz-liste"></ul>
+      </details>
+      <label class="salter">
+        <input id="telCizim" type="checkbox">
+        <span>Tel çizim: <strong id="telDurum">Kapalı</strong></span>
+      </label>
+      <p class="ipucu">Kapalıyken karalama ölçü sayılmaz. Açıkken tasarıma yazılır.</p>
+      <label class="satir">
+        <input id="yalnizYerel" type="checkbox">
+        Yalnız yerel OCR (Gemini yok)
+      </label>
+      <label class="satir token-satir" id="tokenSatir" hidden>
+        API jetonu
+        <input id="token" type="password" autocomplete="off" placeholder="OCR_API_TOKEN">
+      </label>
+      <button id="jsonBtn" type="button">Kesim listesini JSON al</button>
+    </div>
+
+    <section class="kart usta" id="ustaKart">
+      <div class="yukle buyuk" id="fotoCerceve" role="button" tabindex="0" aria-label="Kâğıt fotoğrafı seç">
+        <span class="yukle-yazi">
+          <span class="yukle-baslik">1 · Fotoğraf seç</span>
+          <span class="yukle-alt">Kâğıt bu kesik çerçeveye oturur · mercek tarama ekranında açılır</span>
+        </span>
+        <span class="onizleme-sarici" id="onizlemeSarici" hidden>
+          <span class="mercek-sahne" id="mercekSahne">
+            <img id="onizleme" alt="Kâğıt önizleme">
+            <span id="supheKatman" class="suphe-katman" aria-hidden="true"></span>
+          </span>
+          <span id="buyutec" class="buyutec" hidden aria-hidden="true" aria-label="Mercek"></span>
+        </span>
+        <input id="foto" type="file" accept="image/*">
+      </div>
+      <div id="yuklemeAlani" class="yukleme" hidden>
+        <div class="disli-sahne" aria-hidden="true">
+          <svg class="disli disli-a" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm9.4 4a7.5 7.5 0 0 0-.1-1l2.1-1.6-2-3.4-2.5 1a7.7 7.7 0 0 0-1.7-1L16.8 3h-4l-.4 2.6a7.7 7.7 0 0 0-1.7 1l-2.5-1-2 3.4 2.1 1.6a7.5 7.5 0 0 0 0 2L3.2 14l2 3.4 2.5-1c.5.4 1.1.8 1.7 1L12.8 21h4l.4-2.6c.6-.2 1.2-.6 1.7-1l2.5 1 2-3.4-2.1-1.6c.1-.3.1-.7.1-1Z"/>
+          </svg>
+          <svg class="disli disli-b" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm9.4 4a7.5 7.5 0 0 0-.1-1l2.1-1.6-2-3.4-2.5 1a7.7 7.7 0 0 0-1.7-1L16.8 3h-4l-.4 2.6a7.7 7.7 0 0 0-1.7 1l-2.5-1-2 3.4 2.1 1.6a7.5 7.5 0 0 0 0 2L3.2 14l2 3.4 2.5-1c.5.4 1.1.8 1.7 1L12.8 21h4l.4-2.6c.6-.2 1.2-.6 1.7-1l2.5 1 2-3.4-2.1-1.6c.1-.3.1-.7.1-1Z"/>
+          </svg>
+          <svg class="yuzer kalem" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M3 17.3V21h3.8l11-11.1-3.8-3.8L3 17.3ZM20.7 7c.4-.4.4-1 0-1.4l-2.3-2.3a1 1 0 0 0-1.4 0l-1.8 1.8 3.8 3.8 1.7-1.9Z"/>
+          </svg>
+          <svg class="yuzer metre" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M21 6H3a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1Zm-1 10H4V8h16v8Zm-2-6h-2v2h2v-2Zm-4 0h-2v2h2v-2Zm-4 0H8v2h2v-2Zm-4 0H4v2h2v-2Z"/>
+          </svg>
+        </div>
+        <p>Ölçüler taranıyor ve süzgeçten geçiyor…</p>
+      </div>
+      <div id="supheCubuk" class="suphe-cubuk" hidden>
+        <p id="supheSira" class="perde-ad"></p>
+        <p id="supheOzet" class="perde-ad"></p>
+        <div class="suphe-aksiyon">
+          <button id="supheGeri" type="button" class="perde-kapat" disabled>Geri</button>
+          <button id="supheOnay" type="button">Onayla</button>
+          <button id="supheDuzelt" type="button" class="perde-kapat">Düzelt</button>
+        </div>
+      </div>
+      <p id="durum" class="durum"></p>
+    </section>
+
+    <section id="sonuc" class="kart" hidden>
+      <div class="sonuc-ust">
+        <h2>Kesim listesi</h2>
+        <p id="ozetSerit" class="ozet"></p>
+        <p id="kaynakRozet" class="rozet" hidden></p>
+        <p id="supheUyari" class="suphe-uyari" hidden></p>
+        <p id="telCizimUyari" class="tel-uyari" hidden></p>
+        <div class="tablo-baslik">
+          <span>#</span>
+          <span class="filtre-kok">
+            <button type="button" id="filtreBtn" class="filtre-kutu" aria-expanded="false" aria-haspopup="true">
+              <span id="filtreEtiket">Model</span>
+              <span class="ucgen-asagi" aria-hidden="true"></span>
+            </button>
+            <div id="filtreMenu" class="filtre-menu" hidden role="menu">
+              <button type="button" role="menuitem" data-filtre="tumu">Tümü</button>
+              <button type="button" role="menuitem" data-filtre="govde">Gövde</button>
+              <button type="button" role="menuitem" data-filtre="kapak">Kapak</button>
+              <button type="button" role="menuitem" data-filtre="arkalik">Arkalık</button>
+              <button type="button" role="menuitem" data-filtre="klapa">Klapa</button>
+            </div>
+          </span>
+          <span>Boy &amp; Bant</span><span>En &amp; Bant</span><span>Adet</span><span></span>
+        </div>
+      </div>
+      <div id="listeGovde"></div>
+      <div class="aksiyon">
+        <button id="whatsappBtn" type="button" disabled>WhatsApp ile Kesimciye Gönder</button>
+        <button id="indirBtn" type="button" disabled>Listeyi İndir</button>
+        <button id="yeniBtn" type="button" class="yeni-kagit">
+          <span class="lamba" aria-hidden="true"></span>
+          Yeni kâğıt
+        </button>
+      </div>
+    </section>
+  </main>
+  <div id="ustaOnayPerde" class="perde" hidden>
+    <div class="perde-kutu" role="dialog" aria-labelledby="ustaOnayBaslik">
+      <h3 id="ustaOnayBaslik">3 · Usta onayı</h3>
+      <p id="ustaOnayNeden" class="perde-ad"></p>
+      <p class="perde-soru">Kalınlık nedir?</p>
+      <div class="secim-sira" id="secimKalinlik">
+        <button type="button" data-kalinlik="18">18 mm</button>
+        <button type="button" data-kalinlik="8">8 mm</button>
+        <button type="button" data-kalinlik="4">4 mm</button>
+        <button type="button" data-kalinlik="3">3 mm</button>
+      </div>
+      <p class="perde-soru">Ürün cinsi nedir?</p>
+      <div class="secim-sira" id="secimRol">
+        <button type="button" data-rol="Gövde">Gövde</button>
+        <button type="button" data-rol="Kapak">Kapak</button>
+        <button type="button" data-rol="Klapa">Klapa</button>
+        <button type="button" data-rol="Aralık">Aralık</button>
+      </div>
+      <p class="perde-soru">Malzeme / kaplama?</p>
+      <div class="secim-sira" id="secimMalzeme">
+        <button type="button" data-malzeme="Standart gövde">Standart gövde</button>
+        <button type="button" data-malzeme="Lake boyama">Lake boyama</button>
+        <button type="button" data-malzeme="Membran kaplama">Membran</button>
+        <button type="button" data-malzeme="High Gloss">High Gloss</button>
+      </div>
+      <button id="ustaOnayUygula" type="button">Onayla ve listeyi işle</button>
+    </div>
+  </div>
+  <div id="revizyonPerde" class="perde" hidden>
+    <div class="perde-kutu" role="dialog" aria-labelledby="revizyonBaslik">
+      <h3 id="revizyonBaslik">Hızlı revizyon</h3>
+      <p id="revizyonAd" class="perde-ad"></p>
+      <div class="led-cift perde-led" id="revizyonBoyLed"></div>
+      <label class="perde-satir">Boy
+        <button type="button" class="ok" data-alan="boy" data-yon="-1">−</button>
+        <input id="revizyonBoy" inputmode="numeric">
+        <button type="button" class="ok" data-alan="boy" data-yon="1">+</button>
+      </label>
+      <div class="led-cift perde-led" id="revizyonEnLed"></div>
+      <label class="perde-satir">En
+        <button type="button" class="ok" data-alan="en" data-yon="-1">−</button>
+        <input id="revizyonEn" inputmode="numeric">
+        <button type="button" class="ok" data-alan="en" data-yon="1">+</button>
+      </label>
+      <label class="perde-satir">Adet
+        <button type="button" class="ok" data-alan="adet" data-yon="-1">−</button>
+        <input id="revizyonAdet" inputmode="numeric">
+        <button type="button" class="ok" data-alan="adet" data-yon="1">+</button>
+      </label>
+      <div class="pvc-acilir">
+        <button type="button" id="pvcMenuBtn" class="pvc-menu-baslik" aria-expanded="false" aria-controls="pvcMenuGovde">
+          <span class="ucgen-dolu" aria-hidden="true"></span>
+          <span id="pvcMenuEtiket">Standart Bant ve Özel Ölçüler</span>
+        </button>
+        <div id="pvcMenuGovde" class="pvc-menu-govde" hidden>
+          <div class="secim-sira" id="secimPvc">
+            <button type="button" data-pvc="0.4">0.4 mm</button>
+            <button type="button" data-pvc="0.8">0.8 mm</button>
+            <button type="button" data-pvc="1">1 mm</button>
+            <button type="button" data-pvc="2">2 mm</button>
+            <span id="ozelPvcListe" class="ozel-pvc-liste"></span>
+            <button type="button" id="ozelPvcGir">Özel Ölçü Gir</button>
+          </div>
+          <div id="ozelPvcForm" class="ozel-pvc-form" hidden>
+            <input id="ozelPvcGirdi" inputmode="decimal" placeholder="ör. 1.2">
+            <button type="button" id="ozelPvcKaydet">Kaydet</button>
+          </div>
+          <div id="silOnay" class="sil-onay" hidden>
+            <p>Emin misiniz?</p>
+            <button type="button" id="silEvet">Evet, sil</button>
+            <button type="button" id="silHayir">Vazgeç</button>
+          </div>
+        </div>
+      </div>
+      <button id="revizyonUygula" type="button">Uygula</button>
+      <button id="revizyonKapat" type="button" class="perde-kapat">Kapat</button>
+    </div>
+    </div>
+    <div id="ustaGeriPerde" class="ahsap-perde" hidden>
+      <div class="ahsap-kart" role="dialog" aria-modal="true" aria-labelledby="ustaGeriBaslik">
+        <p id="ustaGeriBaslik" class="oyma oyma-baslik">ELİNE SAĞLIK USTA!</p>
+        <p class="oyma oyma-soru">Yanlış okunan bir ölçü var mı?</p>
+        <p class="oyma-nefes">(Söyle, hemen çözelim)</p>
+        <p class="oyma oyma-tavsiye">Aynı sorunla bir daha karşılaşmamak için tavsiyelerini bildir.</p>
+        <div class="ahsap-mic-sira">
+          <button id="ustaMicBtn" type="button" class="mic-btn" aria-pressed="false" aria-label="Mikrofon">
+            <svg class="mic-svg" viewBox="0 0 48 48" aria-hidden="true">
+              <rect x="18" y="6" width="12" height="22" rx="6" fill="none" stroke="currentColor" stroke-width="2.4"/>
+              <path d="M14 22a10 10 0 0 0 20 0" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+              <path d="M24 32v6M16 38h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <textarea id="ustaGeriMetin" class="oyma-girdi" rows="2" aria-label="Sesli not"></textarea>
+        </div>
+        <button id="ustaGeriAtla" type="button" class="ahsap-atla oyma">[ Sorun Yok, Devam Et &gt;&gt; ]</button>
+      </div>
+    </div>
+    <div id="ciftOnayPerde" class="perde cift-onay-perde" hidden>
+    <div class="perde-kutu cift-onay-kutu" role="dialog" aria-modal="true" aria-labelledby="ciftOnaySoru">
+      <p id="ciftOnaySoru" class="cift-onay-soru"></p>
+      <div class="cift-onay-aksiyon">
+        <button id="ciftOnayEvet" type="button">Evet</button>
+        <button id="ciftOnayHayir" type="button" class="perde-kapat">Hayır</button>
+      </div>
+    </div>
+  </div>
+  </div>
+  <script src="./kapi.js?v=ahsap14"></script>
+  <script src="./kirpici.js?v=ahsap13"></script>
+  <script src="./app.js?v=ahsap14"></script>
+</body>
+</html>

@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Mobilya İmalat Akıllı Reçete</title>
+  <style>
+    :root {
+      --marka: #e8e4dc;
+      --aksiyon: #fb923c;
+      --hata: #dc2626;
+      --zemin: #2c3136;
+      --panel: #1a1e22;
+      --yazi: #e8e4dc;
+      --soluk: #a8a49c;
+      --cizgi: #3a4046;
+      --dis: #2c3136;
+      --bitti: #16a34a;
+      --ust: 52px;
+      --raf: 0px;
+      --hedef: 48px;
+      --yazi-min: 14px;
+      --kose-dugme: 12px;
+      --kose-panel: 16px;
+      --sure-kisa: 160ms;
+      --sure-orta: 240ms;
+      --sure-uzun: 420ms;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; height: 100%; overflow: hidden;
+      font: 15px/1.5 Roboto, "Segoe UI", system-ui, sans-serif;
+      background: var(--dis); color: var(--yazi);
+    }
+    .adim {
+      display: none; position: fixed; inset: 0; z-index: 8;
+      flex-direction: column; justify-content: center;
+      padding: 24px 20px calc(24px + env(safe-area-inset-bottom, 0px));
+      background: var(--zemin);
+    }
+    .adim.acik { display: flex; }
+    button.adimGeri {
+      position: absolute; top: calc(8px + env(safe-area-inset-top, 0px)); left: 8px;
+      width: 48px; min-width: 48px; min-height: 48px; margin: 0; padding: 0;
+      background: transparent; color: var(--marka); border: 0; border-radius: 0;
+    }
+    button.adimGeri svg { width: 28px; height: 28px; display: block; }
+    button.adimIleri {
+      position: absolute; top: calc(8px + env(safe-area-inset-top, 0px)); right: 8px;
+      width: auto; min-width: 64px; min-height: 48px; margin: 0; padding: 0 10px;
+      background: transparent; color: #fb923c; border: 0; border-radius: 0;
+      font-weight: 800;
+    }
+    .adim h1 {
+      margin: 0 0 24px; text-align: center; font-size: 1.45rem; color: var(--marka);
+    }
+    .adim .form { width: 100%; max-width: 400px; margin: 0 auto; }
+    label { display: block; margin: 0 0 10px; font-weight: 700; color: var(--yazi); }
+    input, select {
+      width: 100%; min-height: 48px; margin-top: 4px; padding: 8px 12px;
+      border-radius: 12px; border: 1px solid var(--cizgi); background: var(--panel); color: var(--yazi); font-size: 1.05rem;
+    }
+    .sira { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .sira3 { display: none; }
+    #sahneGovde {
+      position: absolute;
+      top: calc(var(--ust) + var(--raf) + env(safe-area-inset-top, 0px));
+      left: 0; right: 0; bottom: 0;
+      overflow: hidden;
+    }
+    .kanvasKaydir {
+      position: absolute; inset: 0;
+    }
+    #levhaCam {
+      display: none; position: absolute; top: 40px; left: 120px; z-index: 19;
+      transform: none;
+      flex-direction: column; align-items: center; gap: 0;
+      margin: 0; padding: 0;
+      background: transparent;
+      border: 0;
+      pointer-events: none;
+    }
+    #levhaCam.var { display: flex; }
+    .levhaCamIkon {
+      display: none; width: 48px; min-width: 48px; min-height: 48px; margin: 0; padding: 2px 0;
+      flex-direction: column; align-items: center; justify-content: center; gap: 0;
+      pointer-events: auto;
+      background: transparent;
+      color: #e8e4dc;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+      font-size: 10px; font-weight: 800; line-height: 1;
+    }
+    .levhaCamIkon.geldi { display: inline-flex; }
+    .levhaCamIkon.secili { background: transparent; color: #fb923c; border: 0; }
+    .levhaCamIkon svg { width: 22px; height: 22px; display: block; }
+    #levhaCamMotor {
+      display: none; position: absolute; top: 98px; left: 50%; z-index: 19;
+      transform: translateX(-50%);
+      width: min(220px, 72vw); margin: 0; padding: 8px 10px;
+      background: #1a1e22;
+      border: 1px solid #3a4046;
+      border-radius: 12px;
+    }
+    #levhaCamMotor.acik { display: block; max-height: min(62vh, 480px); overflow: auto; }
+    #levhaCamMotor.duvarBilgi {
+      top: 148px; left: 8px; transform: none;
+    }
+    #levhaCamMotor .camMotorBas {
+      margin: 0 0 8px; font-size: 0.78rem; font-weight: 800; color: #e8e4dc;
+    }
+    #levhaCamMotor label {
+      display: block; margin: 0 0 8px; color: #e8e4dc; font-size: 0.72rem; font-weight: 700;
+    }
+    #levhaCamMotor input {
+      width: 100%; min-width: 0; min-height: 36px; margin-top: 2px; padding: 4px 8px;
+      border-radius: 8px; border: 1px solid #3a4046;
+      background: #2c3136; color: #e8e4dc; font-size: 0.9rem;
+    }
+    #levhaCamMotor button.duvarKod {
+      display: block; width: 100%; min-height: 0; margin: 0 0 4px; padding: 6px 8px;
+      border-radius: 8px; border: 1px solid #3a4046; justify-content: flex-start;
+      font-size: 0.78rem; font-weight: 800; color: #e8e4dc;
+      background: #2c3136;
+    }
+    #levhaCamMotor button.duvarKod.soluk { opacity: 0.4; font-weight: 700; background: transparent; }
+    #levhaCamMotor button.duvarKod:disabled { opacity: 0.35; pointer-events: none; }
+    #levhaCamMotor button.duvarKod:active,
+    #levhaCamMotor button.duvarKod.secili,
+    #levhaCamMotor button.duvarEngel:active,
+    #levhaCamMotor button.duvarEngel.secili,
+    #levhaCamMotor button.duvarKaydet:active,
+    #levhaCamMotor button.duvarKaydet.secili {
+      background: #fb923c; color: #7c2d12; border-color: #fb923c;
+    }
+    #levhaCamMotor button.duvarOlcuTik:active,
+    #levhaCamMotor button.duvarOlcuTik.aktif:active {
+      background: #16a34a; color: #fff; border-color: #16a34a;
+    }
+    #levhaCamMotor button.duvarOlcuTik:active:not(.aktif) {
+      background: #3a4046; color: #8b9198; border-color: #8b9198;
+    }
+    #levhaCamMotor input:disabled {
+      background: #2c3136; color: #8b9198; cursor: default;
+    }
+    #levhaCamMotor .duvarOlcuOzet {
+      display: flex; align-items: flex-end; gap: 4px; margin: 4px 0 8px;
+    }
+    #levhaCamMotor .duvarOlcuOzet .hucre {
+      flex: 1; min-width: 0;
+    }
+    #levhaCamMotor .duvarOlcuOzet .ad {
+      display: block; margin: 0; font-size: 0.62rem; font-weight: 800; color: #c4c0b8; text-align: center;
+    }
+    #levhaCamMotor .duvarOlcuOzet .sayi {
+      display: block; margin-top: 2px; padding: 6px 2px; text-align: center;
+      border-radius: 8px; background: #2c3136; color: #e8e4dc;
+      font-size: 0.82rem; font-weight: 800; line-height: 1.1;
+    }
+    #levhaCamMotor .duvarOlcuTikSatir {
+      display: flex; justify-content: flex-start; margin: 2px 0 8px;
+    }
+    #levhaCamMotor button.duvarOlcuTik {
+      display: inline-flex; width: 36px; min-width: 36px; min-height: 36px; margin: 0;
+      padding: 0; border-radius: 8px; font-size: 1.1rem; font-weight: 800;
+      border: 2px solid #94a3b8; background: rgba(255, 255, 255, 0.62); color: #94a3b8;
+      flex: 0 0 36px;
+    }
+    #levhaCamMotor button.duvarOlcuTik.aktif {
+      border-color: #16a34a; background: #16a34a; color: #fff;
+    }
+    #levhaCamMotor .duvarAlt { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+    #levhaCamMotor button.duvarKaydet,
+    #levhaCamMotor button.duvarEngel {
+      display: block; width: 100%; min-height: 36px; margin: 0; padding: 6px 8px;
+      border-radius: 8px; font-size: 0.74rem; font-weight: 800;
+    }
+    #levhaCamMotor button.duvarKaydet {
+      background: #fb923c; color: #7c2d12; border: 1px solid #fb923c;
+    }
+    #levhaCamMotor button.parcaUygula {
+      display: block; width: 100%; min-height: 48px; margin: 8px 0 0; padding: 8px;
+      border-radius: 8px; border: 1px solid #fb923c;
+      background: #fb923c; color: #7c2d12; font-size: 1rem; font-weight: 800;
+    }
+    #levhaCamMotor button.duvarEngel {
+      background: #3a4046; color: #e8e4dc; border: 1px solid #3a4046;
+    }
+    #gerecAyar { display: none; }
+    #gerecAyar .ozellikBas {
+      margin: 0 0 8px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; color: #8b9198;
+    }
+    #gerecAyar p { margin: 0 0 8px; font-weight: 800; color: #e8e4dc; font-size: 0.88rem; }
+    #gerecAyar .sira { display: block; margin-top: 0; }
+    #gerecAyar label { margin: 0 0 8px; color: #c4c0b8; font-size: 0.72rem; }
+    #gerecAyar input {
+      min-height: 36px; margin-top: 2px; padding: 4px 8px;
+      border-radius: 4px; border: 1px solid #3a4046; background: #1a1e22; color: #e8e4dc; font-size: 0.9rem;
+    }
+    button {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 48px; width: 100%; margin-top: 8px; border: 1px solid #3a4046; border-radius: 12px;
+      background: #3a4046; color: #e8e4dc; font-weight: 800; font-size: 1rem; text-decoration: none; cursor: pointer;
+    }
+    button:active {
+      background: #fb923c; color: #7c2d12; border-color: #fb923c;
+    }
+    #musteriAcBtn, #musteriDevam, #isDevam, #musteriKaydet, #geriEvet {
+      background: var(--aksiyon); color: #7c2d12; border-color: var(--aksiyon);
+    }
+    .isListe button {
+      background: #3a4046; color: #e8e4dc; border: 1px solid #3a4046;
+    }
+    .isListe button:active,
+    .isListe button.secili { background: var(--aksiyon); color: #7c2d12; border-color: var(--aksiyon); }
+    .isListe #isDevam { background: var(--aksiyon); color: #7c2d12; border: 0; }
+    #ozelKutu { display: none; margin-top: 8px; }
+    #ozelKutu.acik { display: block; }
+    #adimSahne {
+      display: none; position: fixed; inset: 0; z-index: 9;
+      background: #2c3136;
+    }
+    #adimSahne.acik { display: block; }
+    .ustCubuk {
+      position: absolute; top: 0; left: 0; right: 0; z-index: 18;
+      display: flex; align-items: center; justify-content: space-between;
+      height: calc(var(--ust) + env(safe-area-inset-top, 0px));
+      padding: env(safe-area-inset-top, 0px) 6px 0;
+      background: #2c3136;
+      border-bottom: 1px solid #1a1e22;
+      pointer-events: auto;
+    }
+    .ustGrup {
+      display: flex; align-items: stretch; gap: 0;
+    }
+    .ustCubuk button {
+      pointer-events: auto; width: auto; min-width: var(--hedef); min-height: var(--hedef); margin: 0;
+      padding: 0 8px; gap: 0;
+      background: transparent; color: #d8d4cc; border: 0; border-radius: 0;
+      font-size: var(--yazi-min); font-weight: 700;
+    }
+    .ustCubuk button + button { border-left: 1px solid #3a4046; }
+    .ustCubuk button:active { background: #3a4046; color: #fff; }
+    .ustCubuk #ileriBtn { color: #fb923c; }
+    #adimRaf {
+      display: none;
+    }
+    #adimRafKaydir {
+      flex: 1; display: flex; align-items: center; gap: 8px;
+      padding: 6px 16px 4px; overflow-x: auto; overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      transition: opacity var(--sure-orta) ease, transform var(--sure-orta) ease;
+    }
+    #adimRafAd {
+      display: none; margin: 0; padding: 6px 16px 0;
+      font-size: 12px; font-weight: 800; line-height: 16px; text-align: center;
+      color: var(--yazi); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    #adimRaf.ince #adimRafAd { display: block; }
+    #adimRaf.ince #adimRafKaydir {
+      flex: 0 0 0; height: 0; min-height: 0; padding: 0; overflow: hidden;
+      opacity: 0; transform: translateY(-10px); pointer-events: none;
+    }
+    #adimRaf.ince #adimRafIlerleme { margin: 4px 16px 6px; }
+    #adimRafKaydir .adimRafKart {
+      flex: 0 0 72px; width: 72px; height: 80px; margin: 0; padding: 6px 4px 4px;
+      display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 2px;
+      border-radius: 14px; border: 1px solid var(--cizgi);
+      background: var(--zemin); color: var(--soluk);
+      font-size: 11px; font-weight: 800; line-height: 1.1; text-align: center;
+      pointer-events: auto; -webkit-user-select: none; user-select: none;
+    }
+    #adimRafKaydir .adimRafKart.yapi { position: sticky; left: 0; z-index: 1; background: var(--panel); color: var(--yazi); }
+    #adimRafKaydir .adimRafKart.bitti { color: var(--yazi); border-color: var(--bitti); }
+    #adimRafKaydir .adimRafKart.simdi {
+      background: var(--aksiyon); color: #431407; border-color: var(--aksiyon);
+      transform: scale(1.06); box-shadow: 0 4px 10px rgba(0,0,0,0.28);
+    }
+    #adimRafKaydir .adimRafKart.sirada { opacity: 0.72; }
+    #adimRafKaydir .adimRafKart.kilitli { opacity: 0.45; }
+    #adimRafKaydir .adimRafKart svg { width: 24px; height: 24px; display: block; flex: 0 0 24px; }
+    #adimRafKaydir .adimRafKart .ad { font-size: 12px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    #adimRafKaydir .adimRafKart .deger { font-size: var(--yazi-min); font-variant-numeric: tabular-nums; color: inherit; }
+    #adimRafIlerleme {
+      height: 3px; margin: 0 16px 6px; border-radius: 2px; background: var(--cizgi); overflow: hidden;
+    }
+    #adimRafIlerlemeDol {
+      display: block; height: 100%; width: 0; background: var(--aksiyon);
+      transition: width var(--sure-orta) ease;
+    }
+    @keyframes adimRafNefes {
+      0%, 100% { transform: scale(1.06); }
+      50% { transform: scale(1.12); }
+    }
+    @keyframes adimRafTitre {
+      0%, 100% { transform: scale(1.06) translateX(0); }
+      25% { transform: scale(1.06) translateX(-6px); }
+      75% { transform: scale(1.06) translateX(6px); }
+    }
+    @keyframes adimRafDamga {
+      0% { transform: scale(1.25) rotate(-8deg); }
+      100% { transform: scale(1.06) rotate(0); }
+    }
+    @keyframes adimRafDogdu {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    #adimRafKaydir .adimRafKart.simdi.nefes {
+      animation: adimRafNefes var(--sure-uzun) ease 3;
+    }
+    #adimRafKaydir .adimRafKart.simdi.titrer {
+      animation: adimRafTitre var(--sure-kisa) ease 2;
+    }
+    #adimRafKaydir .adimRafKart.simdi.damga {
+      animation: adimRafDamga var(--sure-orta) ease 1;
+    }
+    #adimRafKaydir .adimRafKart.dogdu {
+      animation: adimRafDogdu var(--sure-orta) ease 1;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #adimRafKaydir .adimRafKart.simdi { transform: none; box-shadow: none; }
+      #adimRafKaydir { transition: none; }
+      #adimRafIlerlemeDol { transition: none; }
+      #adimRafKaydir .adimRafKart.nefes,
+      #adimRafKaydir .adimRafKart.titrer,
+      #adimRafKaydir .adimRafKart.damga,
+      #adimRafKaydir .adimRafKart.dogdu { animation: none !important; }
+    }
+    @media (max-height: 700px) {
+      #adimRafKaydir .adimRafKart { flex-basis: 64px; width: 64px; height: 64px; }
+      #adimRafKaydir .adimRafKart .deger { display: none; }
+      #adimRafKaydir .adimRafKart.simdi .deger { display: block; font-size: 12px; }
+    }
+    #modulZemin {
+      position: absolute; top: calc(var(--ust) + var(--raf) + 40px + env(safe-area-inset-top, 0px)); left: 8px; z-index: 15;
+      width: 48px; min-width: 48px; min-height: 48px; margin: 0; padding: 2px 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0;
+      background: transparent; color: #e8e4dc; border: 0; border-radius: 0;
+      font-size: 10px; font-weight: 800; line-height: 1;
+    }
+    #modulZemin svg { width: 22px; height: 22px; display: block; }
+    #modulZemin.acik { color: #fb923c; }
+    #modulDuvar {
+      position: absolute; top: calc(var(--ust) + var(--raf) + 40px + env(safe-area-inset-top, 0px)); left: 64px; z-index: 15;
+      width: 48px; min-width: 48px; min-height: 48px; margin: 0; padding: 2px 0;
+      display: none; flex-direction: column; align-items: center; justify-content: center; gap: 0;
+      background: transparent; color: #e8e4dc; border: 0; border-radius: 0;
+      font-size: 10px; font-weight: 800; line-height: 1;
+    }
+    #modulDuvar.gorunur { display: flex; }
+    #modulDuvar.acik { color: #fb923c; }
+    #modulDuvar svg { width: 22px; height: 22px; display: block; }
+    #modulMobilya {
+      position: absolute; top: calc(var(--ust) + var(--raf) + 40px + env(safe-area-inset-top, 0px)); left: 176px; z-index: 15;
+      width: auto; min-width: 48px; min-height: 48px; margin: 0; padding: 2px 4px;
+      display: none; flex-direction: column; align-items: center; justify-content: center; gap: 0;
+      background: transparent; color: #e8e4dc; border: 0; border-radius: 0;
+      font-size: 10px; font-weight: 800; line-height: 1; white-space: nowrap;
+    }
+    #modulMobilya.gorunur { display: flex; }
+    #modulMobilya.acik { color: #fb923c; }
+    #modulMobilya svg { width: 22px; height: 22px; display: block; }
+    #modulDuvarSatir {
+      position: absolute; top: calc(var(--ust) + var(--raf) + 92px + env(safe-area-inset-top, 0px));
+      left: 8px; right: 72px; z-index: 15;
+      display: none; flex-direction: row; align-items: center; gap: 8px;
+      margin: 0; padding: 0; background: transparent;
+    }
+    #modulDuvarSatir.acik { display: flex; }
+    #modulDuvarSatir button {
+      width: auto; min-width: 56px; min-height: 48px; margin: 0; padding: 4px 6px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0;
+      background: transparent; color: #e8e4dc; border: 0; border-radius: 0;
+      font-size: 10px; font-weight: 800; line-height: 1.1; text-align: center;
+    }
+    #modulDuvarSatir button.secili { color: #fb923c; }
+    #modulZeminSatir {
+      position: absolute; top: calc(var(--ust) + var(--raf) + 92px + env(safe-area-inset-top, 0px));
+      left: 8px; right: 72px; z-index: 15;
+      display: none; flex-direction: row; align-items: center; gap: 8px;
+      margin: 0; padding: 0; background: transparent;
+    }
+    #modulZeminSatir.acik { display: flex; }
+    #modulZeminSatir button {
+      width: 48px; min-width: 48px; min-height: 48px; margin: 0; padding: 2px 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0;
+      background: transparent; color: #e8e4dc; border: 0; border-radius: 0;
+      font-size: 10px; font-weight: 800; line-height: 1;
+    }
+    #modulZeminSatir button svg { width: 22px; height: 22px; display: block; }
+    #modulZeminSatir button.secili { color: #fb923c; }
+    #modulMobilyaSatir {
+      position: absolute; top: calc(var(--ust) + var(--raf) + 92px + env(safe-area-inset-top, 0px));
+      left: 8px; right: 72px; z-index: 15;
+      display: none; flex-direction: row; align-items: center; gap: 8px;
+      margin: 0; padding: 0; background: transparent;
+      overflow-x: auto;
+    }
+    #modulMobilyaSatir.acik { display: flex; }
+    #modulMobilyaSatir button {
+      width: auto; min-width: 56px; min-height: 48px; margin: 0; padding: 2px 4px; flex: 0 0 auto;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0;
+      background: transparent; color: #e8e4dc; border: 0; border-radius: 0;
+      font-size: 10px; font-weight: 800; line-height: 1.1;
+    }
+    #modulMobilyaSatir button svg { width: 22px; height: 22px; display: block; }
+    #modulMobilyaSatir button span { font-variant-numeric: tabular-nums; }
+    #modulMobilyaSatir button.secili { color: #fb923c; }
+    #programCumle {
+      position: absolute; top: calc(var(--ust) + var(--raf) + 4px + env(safe-area-inset-top, 0px)); left: 8px; right: 64px; z-index: 14;
+      margin: 0; text-align: center; font-weight: 800; color: #e8e4dc; font-size: 1.5rem; line-height: 1.25;
+      white-space: normal; overflow-wrap: anywhere;
+      pointer-events: none;
+    }
+    #programCumle.talimat {
+      color: #fb923c;
+      text-shadow: none;
+    }
+    #programCumle b { font-weight: 900; color: #fb923c; }
+    #programCumle.talimat b { color: #fde68a; }
+    #adimSahne:has(#levhaCamMotor.acik) #programCumle {
+      visibility: hidden;
+    }
+    .kanvasKutu {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      min-height: 0; margin: 0;
+      background-color: #3a4046;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,0.11) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.11) 1px, transparent 1px);
+      background-size: 24px 24px, 24px 24px, 120px 120px, 120px 120px;
+      box-shadow: inset 0 0 0 1px #1a1e22;
+    }
+    #duvarSahne {
+      width: 100%; height: 100%; min-height: 0; margin: 0; border: 0; border-radius: 0;
+      background: transparent; display: block; touch-action: none;
+    }
+    #shortsRail {
+      position: absolute; right: 6px; z-index: 12;
+      top: calc(var(--ust) + var(--raf) + 32px + env(safe-area-inset-top, 0px));
+      bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+      display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 8px;
+      margin: 0; padding: 0; background: none; border: 0;
+      pointer-events: none; overflow: auto;
+    }
+    #shortsRail button {
+      pointer-events: auto; width: 52px; min-width: 52px; min-height: 44px; margin: 0; padding: 4px 2px;
+      flex-direction: column; gap: 2px;
+      background: transparent; border: 0; border-radius: 0; box-shadow: none;
+      color: #e8e4dc; font-size: 0.58rem; font-weight: 800; letter-spacing: 0.02em;
+      text-shadow: none;
+    }
+    #shortsRail .shortsIkon {
+      width: 28px; height: 28px; border-radius: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: transparent; box-shadow: none;
+    }
+    #shortsRail #islemIleri { color: #fb923c; }
+    #shortsRail #islemIleri .shortsIkon { background: transparent; color: #fb923c; }
+    #shortsRail button svg { width: 22px; height: 22px; display: block; }
+    #shortsRail #zoomYakin, #shortsRail #zoomUzak { font-size: 1.2rem; }
+    #zoomKume { display: none; }
+    #saplonKutu {
+      display: none; position: absolute; left: 8px; right: 8px;
+      bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 7;
+      justify-content: center; align-items: flex-end; gap: 12px;
+    }
+    #saplonKutu.acik { display: flex; }
+    button.saplon {
+      width: 42%; max-width: 180px; min-width: 120px; min-height: 140px; margin: 0; padding: 10px 6px 8px;
+      flex-direction: column; gap: 8px;
+      background: #1a1e22; color: #e8e4dc; border: 1px solid #3a4046; border-radius: 12px;
+      font-size: 1rem; font-weight: 800;
+    }
+    button.saplon svg { width: 100%; max-width: 112px; height: 80px; display: block; }
+    button.saplon.secili { background: #fb923c; color: #7c2d12; border-color: #fb923c; }
+    #anketKutu {
+      display: none; position: absolute; left: 8px; right: 8px;
+      bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 10;
+      padding: 10px; border-radius: 16px;
+      background: #1a1e22; border: 1px solid #3a4046;
+    }
+    #anketKutu.acik { display: block; }
+    .anketSatir { display: none; gap: 8px; flex-wrap: wrap; justify-content: center; }
+    .anketSatir.acik { display: flex; }
+    #anketKutu button {
+      width: auto; min-width: 72px; min-height: 48px; margin: 0; padding: 8px 12px;
+      flex-direction: column; gap: 4px;
+      background: #2c3136; color: #e8e4dc; border: 1px solid #3a4046;
+      font-size: 0.82rem; font-weight: 800;
+    }
+    #anketKutu button svg { width: 44px; height: 28px; display: block; }
+    #anketKutu button span { display: block; font-size: 0.68rem; font-weight: 700; opacity: 0.85; }
+    #anketKutu button:active,
+    #anketKutu button.secili {
+      background: rgba(251,146,60,0.92); color: #7c2d12; border-color: rgba(234,88,12,0.8);
+    }
+    #anketKutu .evetHayir button { min-width: 120px; flex-direction: row; font-size: 1rem; }
+    #kapiSurukle, #yukseltiSurukle, #sifonSurukle {
+      display: none; position: absolute; z-index: 9;
+      width: 72px; min-width: 72px; min-height: 72px; margin: 0; padding: 6px 4px 8px;
+      flex-direction: column; gap: 2px;
+      left: 50%; top: 50%; transform: translate(-50%, -50%);
+      background: rgba(255,252,245,0.94); color: #7c2d12; border: 2px solid #ea580c;
+      border-radius: 14px; font-size: 0.72rem; font-weight: 800; touch-action: none;
+      box-shadow: 0 6px 18px rgba(15,23,42,0.22);
+      pointer-events: none;
+    }
+    #kapiSurukle.acik, #ekSurukle.acik, #yukseltiSurukle.acik, #sifonSurukle.acik {
+      display: flex; pointer-events: auto;
+    }
+    #kapiSurukle.cekiliyor, #ekSurukle.cekiliyor, #yukseltiSurukle.cekiliyor, #sifonSurukle.cekiliyor {
+      opacity: 0; pointer-events: none;
+    }
+    #kapiSurukle svg, #ekSurukle svg, #yukseltiSurukle svg, #sifonSurukle svg { width: 36px; height: 36px; display: block; }
+    #ekSurukle {
+      display: none; position: absolute; z-index: 9;
+      width: 88px; min-width: 88px; min-height: 72px; margin: 0; padding: 6px 4px 8px;
+      flex-direction: column; gap: 2px;
+      left: 50%; top: 50%; transform: translate(-50%, -50%);
+      background: rgba(255,252,245,0.94); color: #7c2d12; border: 2px solid #ea580c;
+      border-radius: 14px; font-size: 0.7rem; font-weight: 800; touch-action: none;
+      box-shadow: 0 6px 18px rgba(15,23,42,0.22);
+      pointer-events: none;
+    }
+    #ekSurukle #ekSurukleOlcu { font-size: 0.68rem; font-weight: 700; }
+    #ekVarKutu {
+      display: none; position: absolute; left: 8px; right: 8px;
+      bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 8;
+      justify-content: center; gap: 8px; flex-wrap: wrap;
+    }
+    #ekVarKutu.acik { display: flex; }
+    #ekVarKutu button {
+      width: auto; min-width: 96px; max-width: 160px; margin: 0; padding: 0 12px;
+      background: #1a1e22; color: #e8e4dc; border: 1px solid #3a4046;
+    }
+    #ekVarKutu #ekYokBtn { background: var(--aksiyon); color: #7c2d12; border-color: var(--aksiyon); }
+    #soruSatir {
+      display: none; position: absolute; left: 16px; right: 16px;
+      bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 16;
+      align-items: center; gap: 8px;
+      padding: 8px; border-radius: 14px;
+      background: #1a1e22; border: 1px solid #3a4046;
+    }
+    #soruSatir.acik { display: flex; }
+    #soruSatir input {
+      flex: 1; margin: 0; min-height: 48px;
+      background: #2c3136; color: #e8e4dc; border: 1px solid #3a4046;
+    }
+    #soruSatir button {
+      width: 48px; min-width: 48px; min-height: 48px; margin: 0; padding: 0;
+      background: #fb923c; color: #7c2d12; border: 0; border-radius: 12px;
+    }
+    #soruSatir button svg { width: 28px; height: 28px; display: block; }
+    #soruPerde {
+      display: none; position: absolute; inset: 0; z-index: 17;
+      align-items: center; justify-content: center; padding: 16px;
+      background: rgba(15, 18, 22, 0.78);
+    }
+    #soruPerde:has(#anketKutu.acik),
+    #soruPerde:has(#ekVarKutu.acik),
+    #soruPerde:has(#soruSatir.acik) { display: flex; }
+    #adimSahne:has(#anketKutu.acik) #programCumle,
+    #adimSahne:has(#ekVarKutu.acik) #programCumle,
+    #adimSahne:has(#soruSatir.acik) #programCumle { visibility: hidden; }
+    #soruPerde .perdeKart {
+      width: 100%; max-width: 640px; max-height: 100%; overflow: auto;
+      padding: 24px 20px; border-radius: 20px;
+      background: #1a1e22; border: 1px solid #3a4046;
+    }
+    #perdeSoru {
+      margin: 0 0 20px; text-align: center;
+      font-size: 2.2rem; line-height: 1.2; font-weight: 900; color: #e8e4dc;
+      white-space: normal; overflow-wrap: anywhere;
+    }
+    #perdeSoru b { font-weight: 900; color: #fb923c; }
+    #perdeHata {
+      margin: -8px 0 16px; text-align: center;
+      font-size: 1.15rem; font-weight: 800; color: #f87171;
+    }
+    #perdeHata:empty { display: none; }
+    #soruPerde #anketKutu, #soruPerde #ekVarKutu, #soruPerde #soruSatir {
+      position: static; left: auto; right: auto; bottom: auto;
+      padding: 0; background: transparent; border: 0;
+    }
+    #soruPerde #anketKutu button {
+      min-width: 104px; min-height: 64px; padding: 10px 16px;
+      font-size: 1.3rem; border-radius: 14px;
+    }
+    #soruPerde #anketKutu button svg { width: 56px; height: 36px; }
+    #soruPerde #anketKutu button span { font-size: 0.9rem; }
+    #soruPerde #anketKutu .evetHayir button { min-width: 160px; font-size: 1.4rem; }
+    #soruPerde #ekVarKutu { gap: 12px; }
+    #soruPerde #ekVarKutu button {
+      min-width: 150px; max-width: none; min-height: 64px; font-size: 1.3rem; border-radius: 14px;
+    }
+    #soruPerde #soruSatir { gap: 12px; }
+    #soruPerde #soruSatir input { min-height: 72px; font-size: 1.6rem; text-align: center; }
+    #soruPerde #soruSatir button { width: 72px; min-width: 72px; min-height: 72px; border-radius: 14px; }
+    #soruPerde #soruSatir button svg { width: 36px; height: 36px; }
+    #odaUygula {
+      display: none; position: absolute; right: 68px;
+      bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 16;
+      width: 64px; min-width: 64px; min-height: 56px; margin: 0; padding: 4px 2px;
+      flex-direction: column; gap: 2px;
+      background: #fb923c; color: #7c2d12; border: 0; border-radius: 12px;
+      font-size: 11px; font-weight: 800; line-height: 1;
+    }
+    #odaUygula svg { width: 22px; height: 22px; display: block; }
+    #yukseltiCevir {
+      display: none; position: absolute; left: 50%; transform: translateX(-50%);
+      bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 15; gap: 16px;
+    }
+    #yukseltiCevir.acik { display: flex; }
+    #yukseltiCevir button {
+      width: 56px; height: 56px; min-width: 56px; margin: 0; padding: 0;
+      border-radius: 50%; border: 0; background: #fb923c; color: #7c2d12;
+      font-size: 1.8rem; font-weight: 900; line-height: 1;
+    }
+    #cepheKilitle {
+      display: none; position: absolute; right: 12px; width: auto;
+      bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 20;
+      min-width: 96px; min-height: 48px; margin: 0; padding: 0 16px;
+      background: #fb923c; color: #7c2d12; border: 0; border-radius: 12px;
+      font-weight: 800;
+    }
+    #cepheKilitle.acik { display: block; }
+    #surukleHayalet {
+      display: none; position: fixed; z-index: 30; width: 44px; height: 44px;
+      pointer-events: none; border-radius: 10px; background: rgba(251,146,60,0.85);
+    }
+    #surukleHayalet.acik { display: block; }
+    #duvarDurum { display: none; }
+    .gizli { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+    #menuPanel {
+      position: fixed; top: 0; right: 0; bottom: 0; z-index: 22;
+      width: min(240px, 72vw); padding: 72px 12px 16px;
+      background: var(--panel); border-left: 1px solid var(--cizgi);
+      transform: translateX(100%); transition: transform 0.28s ease;
+      pointer-events: none;
+    }
+    #menuPanel.acik { transform: translateX(0); pointer-events: auto; }
+    #menuPanel a, #menuPanel button {
+      display: flex; align-items: center; justify-content: center;
+      width: 100%; min-height: 48px; margin-top: 8px; padding: 0 12px;
+      border-radius: 12px; border: 1px solid #3a4046;
+      background: #3a4046; color: #e8e4dc;
+      font-weight: 800; font-size: 1rem; text-decoration: none;
+      font-family: inherit; cursor: pointer;
+    }
+    #menuPanel a:first-child { margin-top: 0; }
+    #menuPanel button[hidden] { display: none; }
+    #menuPanel a:active, #menuPanel button:active {
+      background: var(--aksiyon); color: #7c2d12; border-color: var(--aksiyon);
+    }
+    #geriOnay {
+      display: none; position: fixed; inset: 0; z-index: 20;
+      align-items: center; justify-content: center; padding: 24px;
+      background: rgba(15, 23, 42, 0.62);
+    }
+    #geriOnay.acik { display: flex; }
+    #geriOnay .kutu {
+      width: 100%; max-width: 360px; padding: 20px;
+      border-radius: 16px; background: var(--panel); border: 1px solid var(--cizgi);
+    }
+    #geriOnay p { margin: 0 0 16px; font-weight: 700; text-align: center; }
+    #geriOnay .sira { margin-top: 0; }
+    #geriHayir, #ayarKapat, #musteriYeni, #musteriSil {
+      background: var(--panel); color: var(--marka); border: 1px solid var(--cizgi);
+    }
+    #musteriListe {
+      max-height: 36vh; overflow: auto; margin: 4px 0 0; padding: 4px 8px;
+      border: 1px solid var(--cizgi); border-radius: 12px; background: var(--panel);
+    }
+    #musteriListe .musteriSatir {
+      display: flex; align-items: center; gap: 8px; min-height: 48px;
+    }
+    #musteriListe input {
+      width: auto; min-width: 22px; min-height: 22px; margin: 0; flex: 0 0 auto;
+    }
+    #musteriListe .musteriAdBtn, #musteriListe .musteriYeniBtn {
+      width: auto; flex: 1; min-height: 48px; margin: 0; padding: 0 4px;
+      justify-content: flex-start;
+      background: transparent; border: 0; border-radius: 0;
+      font-size: 1rem; font-weight: 700; color: var(--yazi);
+    }
+    #musteriListe .musteriAdBtn.secili, #musteriListe .musteriYeniBtn.secili { color: #fb923c; }
+    #ayarPanel {
+      display: none; position: fixed; inset: 0; z-index: 21;
+      align-items: flex-start; justify-content: center; padding: 16px;
+      background: rgba(15, 23, 42, 0.62); overflow: auto;
+    }
+    #ayarPanel.acik { display: flex; }
+    #ayarPanel .kutu {
+      width: 100%; max-width: 400px; margin: auto; padding: 16px 16px 12px;
+      border-radius: 16px; background: var(--panel); border: 1px solid var(--cizgi);
+    }
+    #ayarPanel h2 { margin: 0 0 12px; font-size: 1.1rem; color: var(--marka); text-align: center; }
+    #ayarPanel .kilit { background: var(--zemin); color: var(--soluk); }
+    .isler { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 4px 0 10px; }
+    .isler label {
+      display: flex; align-items: center; gap: 8px; margin: 0; min-height: 48px;
+      padding: 0 10px; border: 1px solid var(--cizgi); border-radius: 12px; font-weight: 700;
+    }
+    .isler input { width: auto; min-height: 22px; margin: 0; }
+  </style>
+</head>
+<body>
+  <div id="adimMerhaba" class="adim acik">
+    <button type="button" class="adimGeri" id="geriMerhaba" title="Geri" aria-label="Geri">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M15 6 L8 12 L15 18"/></svg>
+    </button>
+    <button type="button" class="adimIleri" id="ileriMerhaba" title="İleri">İleri</button>
+    <h1>Merhaba usta</h1>
+    <div class="form">
+      <button type="button" id="musteriAcBtn">Müşteri</button>
+    </div>
+  </div>
+  <div id="adimMusteri" class="adim">
+    <button type="button" class="adimGeri" id="geriMusteri" title="Geri" aria-label="Geri">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M15 6 L8 12 L15 18"/></svg>
+    </button>
+    <button type="button" class="adimIleri" id="ileriMusteri" title="İleri">İleri</button>
+    <h1>Müşteri</h1>
+    <div class="form">
+      <label>Kayıtlı müşteri</label>
+      <div id="musteriListe"></div>
+      <button type="button" id="musteriSil">Sil</button>
+      <div class="sira">
+        <label>Ad<input id="musteriAd" autocomplete="name"></label>
+        <label>Soyad<input id="musteriSoyad"></label>
+      </div>
+      <label>Adres<input id="musteriAdres"></label>
+      <button type="button" id="musteriDevam">Devam</button>
+    </div>
+  </div>
+  <div id="adimIs" class="adim">
+    <button type="button" class="adimGeri" id="geriIs" title="Geri" aria-label="Geri">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M15 6 L8 12 L15 18"/></svg>
+    </button>
+    <button type="button" class="adimIleri" id="ileriIs" title="İleri">İleri</button>
+    <h1>Ne yapıyoruz usta?</h1>
+    <div class="form isListe">
+      <button type="button" class="isSec" data-is="Mutfak">Mutfak</button>
+      <button type="button" class="isSec" data-is="Vestiyer">Vestiyer</button>
+      <button type="button" class="isSec" data-is="Yatak">Yatak odası</button>
+      <button type="button" class="isSec" data-is="Ozel">Özel iş</button>
+      <div id="ozelKutu">
+        <label>Yaz<input id="isOzel" placeholder="ör. TV ünitesi"></label>
+      </div>
+      <button type="button" id="isDevam">Devam</button>
+    </div>
+  </div>
+  <div id="adimSahne">
+    <div class="ustCubuk">
+      <div class="ustGrup">
+        <button type="button" id="geriBtn" title="Geri">Geri</button>
+      </div>
+      <div class="ustGrup">
+        <button type="button" id="sigdirBtn" title="Odayı sığdır">Sığdır</button>
+        <button type="button" id="ileriBtn" title="İleri">İleri</button>
+      </div>
+      <div class="ustGrup">
+        <button type="button" id="ustAyarlar" title="Ayarlar">Ayar</button>
+        <button type="button" id="menuBtn" title="Menü">Menü</button>
+      </div>
+    </div>
+    <div id="adimRaf">
+      <div id="adimRafKaydir"></div>
+      <p id="adimRafAd"></p>
+      <div id="adimRafIlerleme"><span id="adimRafIlerlemeDol"></span></div>
+    </div>
+    <button type="button" id="modulZemin" aria-label="Zemin" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="6" width="16" height="12" rx="1"/></svg>
+      Zemin
+    </button>
+    <button type="button" id="modulDuvar" aria-label="Duvar" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 7 H19 V17 H5 Z"/><path d="M9 17 V12 H15 V17"/></svg>
+      Duvar
+    </button>
+    <button type="button" id="modulMobilya" aria-label="Mobilya" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 10h16v10H4z"/><path d="M4 10V7h16v3"/></svg>
+      Mobilya
+    </button>
+    <div id="modulZeminSatir"></div>
+    <div id="modulDuvarSatir"></div>
+    <div id="modulMobilyaSatir"></div>
+    <p id="programCumle">Oda nasıl?</p>
+    <div id="sahneGovde">
+    <div class="kanvasKaydir">
+    <div class="kanvasKutu">
+      <div id="levhaCam">
+        <button type="button" class="levhaCamIkon" id="camDuvar" data-tip="duvar" aria-label="Engel">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="16" height="16" rx="1"/><path d="M8 12 H16"/></svg>
+          Engel
+        </button>
+      </div>
+      <div id="levhaCamMotor"></div>
+      <canvas id="duvarSahne" width="400" height="300" aria-label="Sonsuz saha ve zemin"></canvas>
+      <button type="button" class="gerecIkon" id="kapiSurukle" data-tip="esik" aria-label="Kapı eşiğini yerine sürükle bırak usta">
+        <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <rect x="10" y="4" width="16" height="28" rx="1.5" fill="#c4a484" stroke="#7c2d12"/>
+          <path d="M10 4 H26" stroke="#7c2d12"/>
+          <circle cx="22" cy="18" r="1.4" fill="#7c2d12" stroke="none"/>
+        </svg>
+        Eşik
+      </button>
+      <button type="button" class="gerecIkon" id="ekSurukle" data-tip="ekparca" aria-label="Kenara sürükle bırak usta">
+        <svg viewBox="0 0 36 36" fill="none" stroke="#7c2d12" stroke-width="1.6">
+          <rect x="6" y="10" width="24" height="16" rx="1" fill="#d5c4a8"/>
+          <rect x="20" y="6" width="10" height="10" rx="1" fill="#c2410c"/>
+        </svg>
+        <span id="ekSurukleAd">Çıkıntı</span>
+        <span id="ekSurukleOlcu"></span>
+      </button>
+      <button type="button" class="gerecIkon" id="yukseltiSurukle" data-tip="yukselti" aria-label="Yükseltiyi yerine sürükle bırak usta">
+        <svg viewBox="0 0 36 36" fill="none" stroke="#7c2d12" stroke-width="1.7">
+          <rect x="6" y="18" width="24" height="8" rx="1" fill="#d97706"/>
+          <path d="M8 18 V14 H28 V18"/>
+        </svg>
+        Yükselti
+      </button>
+      <button type="button" class="gerecIkon" id="sifonSurukle" data-tip="sifon" aria-label="Sifonu yerine sürükle bırak usta">
+        <svg viewBox="0 0 36 36" fill="none" stroke="#0e7490" stroke-width="1.8">
+          <circle cx="18" cy="18" r="10" fill="#ecfeff"/>
+          <circle cx="18" cy="18" r="4" fill="#0e7490" stroke="none"/>
+          <path d="M18 8 V12 M18 24 V28 M8 18 H12 M24 18 H28"/>
+        </svg>
+        Sifon
+      </button>
+    </div>
+    <div id="shortsRail">
+      <button type="button" id="zoomYakin" title="Yakın" aria-label="Yakın">+</button>
+      <button type="button" id="zoomUzak" title="Uzak" aria-label="Uzak">−</button>
+      <button type="button" id="zoomSigdir" title="Sığdır" aria-label="Sığdır">Sığdır</button>
+      <button type="button" id="islemOnce" aria-label="Önceki">
+        <span class="shortsIkon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14 6 L8 12 L14 18"/></svg>
+        </span>
+        Önceki
+      </button>
+      <button type="button" id="islemIleri" aria-label="Sonraki">
+        <span class="shortsIkon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 6 L16 12 L10 18"/></svg>
+        </span>
+        Sonraki
+      </button>
+    </div>
+    <div id="saplonKutu">
+      <button type="button" class="saplon" data-saplon="kup" aria-label="Küp">
+        <svg viewBox="0 0 56 42" fill="#d5c4a8" stroke="#8d7c64" stroke-width="1.8"><rect x="6" y="8" width="44" height="26" rx="1"/></svg>
+        Küp
+      </button>
+    </div>
+    <div id="yukseltiCevir">
+      <button type="button" data-yon="-1" title="Ters yöne çevir" aria-label="Ters yöne çevir">⟲</button>
+      <button type="button" data-yon="1" title="Saat yönüne çevir" aria-label="Saat yönüne çevir">⟳</button>
+    </div>
+    <div id="soruPerde">
+    <div class="perdeKart">
+    <p id="perdeSoru"></p>
+    <p id="perdeHata"></p>
+    <div id="anketKutu">
+      <div class="anketSatir" data-anket="oda_tip">
+        <button type="button" data-tip="kup">
+          <svg viewBox="0 0 44 28"><rect x="8" y="6" width="28" height="16" rx="1" fill="#d5c4a8" stroke="#8d7c64"/></svg>
+          Küp
+        </button>
+        <button type="button" data-tip="gonyesiz">
+          <svg viewBox="0 0 44 28"><path d="M8 22 L12 6 H36 L32 22 Z" fill="#d5c4a8" stroke="#8d7c64"/></svg>
+          Gönyesiz
+        </button>
+        <button type="button" data-tip="girinti">
+          <svg viewBox="0 0 44 28"><path d="M6 6 H38 V22 H26 V14 H18 V22 H6 Z" fill="#d5c4a8" stroke="#8d7c64"/></svg>
+          Girintili
+        </button>
+        <button type="button" data-tip="cikinti">
+          <svg viewBox="0 0 44 28"><path d="M6 6 H38 V22 H26 V26 H18 V22 H6 Z" fill="#d5c4a8" stroke="#8d7c64"/></svg>
+          Çıkıntılı
+        </button>
+        <button type="button" data-tip="ikisi">
+          <svg viewBox="0 0 44 28"><path d="M6 8 H20 V4 H28 V8 H38 V22 H24 V26 H16 V22 H6 Z" fill="#d5c4a8" stroke="#8d7c64"/></svg>
+          İkisi
+        </button>
+      </div>
+      <div class="anketSatir evetHayir" data-anket="yukselti">
+        <button type="button" data-var="1">Evet</button>
+        <button type="button" data-var="0">Hayır</button>
+      </div>
+      <div class="anketSatir" data-anket="yukselti_sekil">
+        <button type="button" data-sekil="duz">
+          <svg viewBox="0 0 44 28"><rect x="6" y="4" width="32" height="20" fill="none" stroke="#8d7c64"/><rect x="6" y="4" width="32" height="6" fill="#fb923c"/></svg>
+          Düz
+        </button>
+        <button type="button" data-sekil="L">
+          <svg viewBox="0 0 44 28"><rect x="6" y="4" width="32" height="20" fill="none" stroke="#8d7c64"/><path d="M6 4 H38 V10 H12 V24 H6 Z" fill="#fb923c"/></svg>
+          L
+        </button>
+        <button type="button" data-sekil="U">
+          <svg viewBox="0 0 44 28"><rect x="6" y="4" width="32" height="20" fill="none" stroke="#8d7c64"/><path d="M6 4 H38 V24 H32 V10 H12 V24 H6 Z" fill="#fb923c"/></svg>
+          U
+        </button>
+      </div>
+      <div class="anketSatir evetHayir" data-anket="sifon">
+        <button type="button" data-var="1">Evet</button>
+        <button type="button" data-var="0">Hayır</button>
+      </div>
+      <div class="anketSatir" data-anket="mutfak_sekil">
+        <button type="button" data-sekil="duz">
+          <svg viewBox="0 0 44 28"><rect x="6" y="18" width="32" height="6" fill="#d5c4a8" stroke="#8d7c64"/></svg>
+          Düz<span>tek duvar</span>
+        </button>
+        <button type="button" data-sekil="L">
+          <svg viewBox="0 0 44 28"><path d="M8 6 V24 H36 V18 H14 V6 Z" fill="#d5c4a8" stroke="#8d7c64"/></svg>
+          L<span>iki komşu</span>
+        </button>
+        <button type="button" data-sekil="U">
+          <svg viewBox="0 0 44 28"><path d="M8 6 V24 H36 V6 H30 V18 H14 V6 Z" fill="#d5c4a8" stroke="#8d7c64"/></svg>
+          U<span>üç duvar</span>
+        </button>
+        <button type="button" data-sekil="kup">
+          <svg viewBox="0 0 44 28"><path d="M8 4 H36 V24 H8 Z M14 10 H30 V18 H14 Z" fill="#d5c4a8" stroke="#8d7c64" fill-rule="evenodd"/></svg>
+          Küp<span>dört duvar</span>
+        </button>
+      </div>
+      <div class="anketSatir" data-anket="mutfak_duvar">
+        <button type="button" data-no="1">D1</button>
+        <button type="button" data-no="2">D2</button>
+        <button type="button" data-no="3">D3</button>
+        <button type="button" data-no="4">D4</button>
+        <button type="button" data-tamam="1">Tamam</button>
+      </div>
+      <div class="anketSatir" data-anket="duvar_no">
+        <button type="button" data-no="1">1 Ön</button>
+        <button type="button" data-no="2">2 Sağ</button>
+        <button type="button" data-no="3">3 Arka</button>
+        <button type="button" data-no="4">4 Sol</button>
+      </div>
+      <div class="anketSatir" data-anket="duvar_gerec">
+        <button type="button" data-engel="kapi">Kapı</button>
+        <button type="button" data-engel="pencere">Pencere</button>
+        <button type="button" data-engel="priz">Priz</button>
+        <button type="button" data-engel="su">Su</button>
+        <button type="button" data-engel="gaz">Gaz</button>
+        <button type="button" data-engel="radiator">Radyatör</button>
+        <button type="button" data-engel="hava">Hava</button>
+        <button type="button" data-engel="pimas">Pimaş</button>
+        <button type="button" data-engel="sayac">Sayaç</button>
+        <button type="button" data-engel="nis">Niş</button>
+        <button type="button" data-engel="kiris">Kiriş</button>
+        <button type="button" data-engel="kolon">Kolon</button>
+        <button type="button" data-yok="1">Yok</button>
+        <button type="button" data-bitir="1">Bitir</button>
+      </div>
+      <div class="anketSatir evetHayir" data-anket="duvar_yon">
+        <button type="button" data-yon="sol">Soldan</button>
+        <button type="button" data-yon="sag">Sağdan</button>
+      </div>
+      <div class="anketSatir" data-anket="pimas_kose">
+        <button type="button" data-kose="1-2">1-2</button>
+        <button type="button" data-kose="2-3">2-3</button>
+        <button type="button" data-kose="3-4">3-4</button>
+        <button type="button" data-kose="4-1">4-1</button>
+      </div>
+      <div class="anketSatir evetHayir" data-anket="duvar_baska">
+        <button type="button" data-var="1">Evet</button>
+        <button type="button" data-var="0">Hayır</button>
+      </div>
+      <div class="anketSatir evetHayir" data-anket="duvar_baska_duvar">
+        <button type="button" data-var="1">Evet</button>
+        <button type="button" data-var="0">Hayır</button>
+      </div>
+    </div>
+    <div id="ekVarKutu">
+      <button type="button" id="ekCikintiBtn">Çıkıntı ekle</button>
+      <button type="button" id="ekGirintiBtn">Girinti ekle</button>
+      <button type="button" id="ekYokBtn">Yok</button>
+    </div>
+    <div id="soruSatir">
+      <input id="soruMm" type="number" min="1" step="any" inputmode="decimal" aria-label="Ölçü">
+      <button type="button" id="soruTamam" title="Tamam" aria-label="Tamam">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M5 12 L10 17 L19 7"/></svg>
+      </button>
+    </div>
+    </div>
+    </div>
+    <button type="button" id="cepheKilitle">Kilitle</button>
+    <button type="button" id="odaUygula" title="Kilitle ve ilerle" aria-label="Kilitle ve ilerle">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+      İlerle
+    </button>
+    </div>
+    </div>
+    <div class="gizli">
+      <p id="solKomut"></p>
+      <div id="solParcaListe"></div>
+      <div id="gerecAyar">
+        <p id="gerecAyarBaslik"></p>
+        <div class="sira" id="gerecAyarSatir"></div>
+      </div>
+      <input id="odaEn" type="number">
+      <input id="odaBoy" type="number">
+      <input id="odaYuk" type="number">
+      <p id="duvarDurum" role="status"></p>
+    </div>
+  </div>
+  <div id="menuPanel">
+    <a href="./ayarlar.html">Ayarlar</a>
+    <a href="./zemin.html">Zemin/Gereçleri</a>
+    <a href="./duvar.html">Duvar/Gereçleri</a>
+    <button type="button" id="menuZeminDuzelt" hidden>Zemini düzelt</button>
+    <button type="button" id="menuDuvarDuzelt" hidden>Duvarı düzelt</button>
+    <button type="button" id="menuYedekAl">Yedek al</button>
+    <button type="button" id="menuYedekYukle">Yedekten yükle</button>
+    <input id="yedekDosya" type="file" accept="application/json,.json" hidden>
+  </div>
+  <div id="ayarPanel" role="dialog" aria-labelledby="ayarBaslik" aria-modal="true">
+    <div class="kutu">
+      <h2 id="ayarBaslik">Usta ajandası</h2>
+      <label>Atölye<input id="ayarAtolye" class="kilit" readonly></label>
+      <label>Usta<input id="ayarUsta" class="kilit" readonly></label>
+      <p style="margin:0 0 4px;font-weight:700">Yapılacak işler</p>
+      <div class="isler">
+        <label><input type="checkbox" name="isler" value="Mutfak"> Mutfak</label>
+        <label><input type="checkbox" name="isler" value="Yatak"> Yatak</label>
+        <label><input type="checkbox" name="isler" value="Vestiyer"> Vestiyer</label>
+        <label><input type="checkbox" name="isler" value="Banyo"> Banyo</label>
+        <label><input type="checkbox" name="isler" value="Salon"> Salon</label>
+      </div>
+      <label>Diğer<input id="musteriDiger" placeholder="ör. TV ünitesi"></label>
+      <button type="button" id="musteriKaydet">Kaydet</button>
+      <div class="sira">
+        <button type="button" id="ayarKapat">Kapat</button>
+        <button type="button" id="musteriYeni">Yeni</button>
+      </div>
+    </div>
+  </div>
+  <div id="geriOnay" role="dialog" aria-labelledby="geriSoru" aria-modal="true">
+    <div class="kutu">
+      <p id="geriSoru">Web sayfasına geçmek istiyor musunuz?</p>
+      <div class="sira">
+        <button type="button" id="geriHayir">Hayır</button>
+        <button type="button" id="geriEvet">Evet</button>
+      </div>
+    </div>
+  </div>
+  <div id="surukleHayalet"></div>
+  <script src="/zemin/zemin_motor.js?v=6"></script>
+  <script src="/mobilya/mobilya_motor.js?v=7"></script>
+  <script src="./olcu.js?v=2"></script>
+  <script src="./duvar_motor.js?v=2"></script>
+  <script src="./vitrin_ciz.js?v=71"></script>
+  <script src="./depo.js?v=5"></script>
+  <script src="./adim_raf.js?v=7"></script>
+<script src="./vitrin.js?v=144"></script>
+</body>
+</html>

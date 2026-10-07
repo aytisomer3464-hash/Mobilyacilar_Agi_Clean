@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "mobilyaci-agi"
+  },
+  "targets": {
+    "mobilyaci-agi": {
+      "hosting": {
+        "ahsap13": [
+          "mobilyaci-agi"
+        ]
+      }
+    }
+  }
+}

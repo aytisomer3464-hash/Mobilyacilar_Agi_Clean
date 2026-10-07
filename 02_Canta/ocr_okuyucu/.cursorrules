@@ -1,0 +1,17 @@
+# Proje Mimari ve Kod Kalitesi Kuralları
+
+1. **Spagetti ve Çakışma Yasağı:** 
+   - Kod yazarken veya güncellerken mevcut fonksiyonları ezen (override eden), çakışan event listener'lar oluşturan veya spagetti kod yapısına yol açan değişiklikler kesinlikle yapma.
+   - Aynı anda birden fazla tetiklemeyi önlemek için kilit mekanizmalarını (taramaKilit vb.) her zaman aktif ve korumalı tut.
+
+2. **İşleyiş Akışı Korunumu:** 
+   - Ölçü defterinden kesim atölyesine uzanan temel akışı (Fotoğraf seç -> Otomatik kırp -> OCR/Tara -> Usta Onayı) bozacak veya aksatacak mimari değişikliklerden kaçın.
+
+3. **Riskli Komut Bildirimi (Güvenlik Kalkanı):** 
+   - Eğer kullanıcıdan gelen yeni bir komut veya istek; mevcut kararlı sistemi bozacak, kodlar arasında çakışma yaratacak, yarış durumuna (race condition) sebep olacak veya mantık hatası doğuracaksa:
+   - Kodu doğrudan yazma. Önce **kesin bir dille uyar**, tehlikeyi ve çakışma noktasını açıklayarak kullanıcıya bildir, alternatif güvenli yolu öner.
+
+4. **Modülerlik ve Temizlik:** 
+   - Dosyaları şişirme, kodları gereksiz yere çoğaltma, performans kaybettiren sonsuz döngülere (rAF vb.) tavan sınırları koy.
+
+5. **Kapı yeri:** `sunucu.py` ve `masaustu.py` bu klasörde kalır. Kök veya `01_` altına taşınmaz; OCR ana siteye iframe ile gömülmez.

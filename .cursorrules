@@ -1,0 +1,39 @@
+"KURAL (DEMİRBAŞ KORUMA): Kod yazmadan önce mevcut düzeni oku. Çalışan mekanizmayı ezme, silme, çakıştırma. Üzerine uyumlu ekle. Asıl kök `..\Mobilyacılar_Agi` dokunulmaz. Canlı `web.app` bu Clean kopyadan yayınlanmaz."
+
+# MOBİLYACILAR AĞI — CLEAN KÖK HUDUT
+
+Gaziantep atölye motoru. Düz m² hesap değil: ölçü → reçete → usta mühür → kesim. İnternet şart değil. Exploit/PoC yok.
+
+**ŞU AN:** Zemin + duvar kilitli (2026-10-04). Mobilya motoru (aşama 3) açık; hesap `02_Canta/elle_olcu/mobilya/`. Duvar kilitinden sonra reçete sahnede bir tur listelenir.
+
+**Üç aşama (Mobilya İmalat Akıllı Reçete):** zemin → duvar → mobilya.
+- 1 ve 2: program **%90** soru-cevapla götürür; usta ölçer, bırakır. Tur + Uygula = kilit. %10: tur içinde yanlış ölçü düzelir. Kritik düzeltme yalnız Menü. Mühürsüz sonraki aşama yok.
+- 3: program **bir tur** en mantıklı işi planlar, sonra ustaya bırakır. “Her aşamada bir tur” yanlış.
+
+Parametre projeyi bozacaksa: yazılmaz; hata + kırmızı + **son kayıt**. Devasa makas (150 cm / 1500 mm / 1,5 cm): uyarı.
+
+## 1. ÇANTA (4 — beşinci kapı yok)
+
+| # | Ad | Yol / paket |
+| --- | --- | --- |
+| 1 | OCR ölçü | `/okuyucu/` · `02_Canta/ocr_okuyucu` |
+| 2 | Fire ebatlama | `/ebatlama/` · `02_Canta/ebatlama` |
+| 3 | Mobilya İmalat Akıllı Reçete | `/duvar/` (zemin js: `/zemin/…`) · `02_Canta/elle_olcu` |
+| 4 | Tel çizim | `/tel/` · `02_Canta/tel_cizim` iskelet |
+
+Menü ve iç başlık bu dört addır. “Elle ölçü” / “Duvar giydir” / 5. slot yok. Eski `/portal` ana sayfaya (`/`) gider. iframe yok.
+
+## 2. ÇİFT KAPI
+- `01_Ana_Site`: vitrin + çanta düğmeleri. Motor matematiği yok.
+- `02_Canta`: atölye. `sunucu.py` / `masaustu.py` yalnız `ocr_okuyucu` içinde.
+- `00_Yayin`: pack çıktısı. Kaynak gibi düzenleme.
+- Motorlar paylaşılmaz. Zemin hesabı duvar `motor.py` içine gömülmez.
+
+## 3. OCR DEMİRBAŞ
+Foto → kırp → Tara → Geri·Onayla·Düzelt → bant → model filtresi (ekran) → WhatsApp/indir (tüm dolap). RapidOCR + Gemini yedek. `/api/tara` `/api/onizle` try/except. 401 kara kutuya yazılmaz. Çift tarama kilidi kalkmaz.
+
+## 4. TEK ADIM
+Bir mesajda bir iş. Açık onay yoksa kod/HTML/CSS yok. “Ne yapılır?” onay değildir.
+
+## 5. ÇIKTI
+Uzun uydurma rapor yok. Çalıştırma / yayın ayrı onay.

@@ -1,0 +1,51 @@
+# Yayın kopyası pack_yayin.py ile üretilir; kaynağa karışmaz
+00_Firebase_Yayin/
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+
+# Gizli ve yerel veri
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+gecmis_kayitlar.json
+hata_log.txt
+
+# OCR atölye verisi (yerel arşiv / kota)
+02_ETakim_Cantasi/ocr_okuyucu/veri/arsiv/
+02_ETakim_Cantasi/ocr_okuyucu/veri/ogrenme/
+02_ETakim_Cantasi/ocr_okuyucu/veri/hatalar/
+
+# Kilit ve geçici
+*.lock
+*.tmp
+*.temp
+*.log
+!pack_yayin.py
+
+# Editör / OS
+.idea/
+.vscode/
+*.swp
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Firebase / npm çöp
+.firebase/
+node_modules/
+npm-debug.log*

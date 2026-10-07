@@ -1,0 +1,130 @@
+{
+  "hosting": {
+    "target": "ahsap13",
+    "public": "00_Yayin",
+    "cleanUrls": true,
+    "predeploy": [
+      "python pack_yayin.py"
+    ],
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "headers": [
+      {
+        "source": "**",
+        "headers": [
+          {
+            "key": "X-Content-Type-Options",
+            "value": "nosniff"
+          },
+          {
+            "key": "X-Frame-Options",
+            "value": "DENY"
+          },
+          {
+            "key": "Referrer-Policy",
+            "value": "strict-origin-when-cross-origin"
+          },
+          {
+            "key": "Permissions-Policy",
+            "value": "accelerometer=(), camera=(self), display-capture=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(self), payment=(), usb=(), interest-cohort=()"
+          },
+          {
+            "key": "Cross-Origin-Opener-Policy",
+            "value": "same-origin"
+          },
+          {
+            "key": "Cross-Origin-Resource-Policy",
+            "value": "same-origin"
+          },
+          {
+            "key": "Strict-Transport-Security",
+            "value": "max-age=31536000; includeSubDomains"
+          },
+          {
+            "key": "Content-Security-Policy",
+            "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://wa.me; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' https:; worker-src 'self' blob:; upgrade-insecure-requests"
+          }
+        ]
+      },
+      {
+        "source": "**/*.@(html|js|css)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
+          }
+        ]
+      }
+    ],
+    "rewrites": [
+      {
+        "source": "/okuyucu",
+        "destination": "/okuyucu/index.html"
+      },
+      {
+        "source": "/okuyucu/**",
+        "destination": "/okuyucu/index.html"
+      },
+      {
+        "source": "/ebatlama",
+        "destination": "/ebatlama/index.html"
+      },
+      {
+        "source": "/ebatlama/**",
+        "destination": "/ebatlama/index.html"
+      },
+      {
+        "source": "/elle",
+        "destination": "/elle/index.html"
+      },
+      {
+        "source": "/elle/**",
+        "destination": "/elle/index.html"
+      },
+      {
+        "source": "/tel",
+        "destination": "/tel/index.html"
+      },
+      {
+        "source": "/tel/**",
+        "destination": "/tel/index.html"
+      },
+      {
+        "source": "/duvar",
+        "destination": "/duvar/index.html"
+      },
+      {
+        "source": "/duvar/**",
+        "destination": "/duvar/index.html"
+      },
+      {
+        "source": "/api",
+        "run": {
+          "serviceId": "cloud-bridge",
+          "region": "europe-west1"
+        }
+      },
+      {
+        "source": "/api/**",
+        "run": {
+          "serviceId": "cloud-bridge",
+          "region": "europe-west1"
+        }
+      },
+      {
+        "source": "/saglik",
+        "run": {
+          "serviceId": "cloud-bridge",
+          "region": "europe-west1"
+        }
+      },
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

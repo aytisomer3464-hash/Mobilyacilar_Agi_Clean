@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<script src="./vitrin_kapi.js"></script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Ayarlar</title>
+  <style>
+    :root {
+      --marka: #e8e4dc;
+      --aksiyon: #fb923c;
+      --zemin: #2c3136;
+      --panel: #1a1e22;
+      --yazi: #e8e4dc;
+      --soluk: #a8a49c;
+      --cizgi: #3a4046;
+      --dis: #2c3136;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; height: 100%;
+      font: 15px/1.5 Roboto, "Segoe UI", system-ui, sans-serif;
+      background: var(--dis); color: var(--yazi);
+    }
+    .sahne {
+      max-width: 440px; margin: 0 auto; min-height: 100dvh;
+      padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+      display: flex; flex-direction: column;
+      background: var(--zemin);
+    }
+    .sira { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .sira3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 8px; }
+    .baslik { margin: 16px 0 8px; font-weight: 700; color: var(--marka); }
+    button {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 48px; width: 100%; margin-top: 8px; border: 0; border-radius: 12px;
+      background: #3a4046; color: #e8e4dc; border: 1px solid #3a4046; font-weight: 800; font-size: 1rem; cursor: pointer;
+    }
+    #kaydetBtn, button[data-kaydet] { background: var(--aksiyon); color: #7c2d12; border: 0; }
+    button.geri, button.ikinci, button.sec {
+      background: var(--panel); color: var(--marka); border: 1px solid var(--cizgi);
+    }
+    button.geri, button.ikinci { width: auto; min-width: 96px; margin: 0; padding: 0 18px; }
+    button.sec { margin-top: 0; }
+    button.sec.acik { background: var(--aksiyon); color: #7c2d12; border-color: var(--aksiyon); }
+    h1 { margin: 16px 0 4px; font-size: 1.15rem; color: var(--marka); }
+    .ipucu { margin: 0 0 14px; color: var(--soluk); }
+    #durum { min-height: 1.6em; margin: 8px 0 0; color: var(--soluk); }
+    .altBar { margin-top: auto; }
+    @media (min-width: 1024px) {
+      .sahne { max-width: none; width: 100%; padding: 16px 28px calc(16px + env(safe-area-inset-bottom, 0px)); }
+      .form, .altBar { width: 100%; max-width: 560px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sahne">
+    <button type="button" class="geri" id="geriBtn">Geri</button>
+    <h1>Ayarlar</h1>
+    <p class="ipucu">Ölçü birimi ve zoom hızı tüm sahneye uygulanır. Kaydetmeden çıkma.</p>
+    <div class="form">
+      <p class="baslik">Ölçü</p>
+      <div class="sira">
+        <button type="button" class="sec" id="mmBtn">mm</button>
+        <button type="button" class="sec" id="cmBtn">cm</button>
+      </div>
+      <p class="baslik">Zoom hızı</p>
+      <div class="sira3">
+        <button type="button" class="sec" id="zoomYavas">Yavaş</button>
+        <button type="button" class="sec" id="zoomNormal">Normal</button>
+        <button type="button" class="sec" id="zoomHizli">Hızlı</button>
+      </div>
+    </div>
+    <div class="altBar">
+      <p id="durum" role="status"></p>
+      <button type="button" id="kaydetBtn">Kaydet</button>
+      <button type="button" class="ikinci" id="altGeri">Geri</button>
+    </div>
+  </div>
+  <script src="./olcu.js"></script>
+  <script>
+    (function () {
+      var O = window.MagiOlcu;
+      var ZOOM_ANAHTAR = "magi_zoom_hiz";
+      var sec = O.oku();
+      var zoom = localStorage.getItem(ZOOM_ANAHTAR) || "normal";
+      function goster() {
+        document.getElementById("mmBtn").classList.toggle("acik", sec === "mm");
+        document.getElementById("cmBtn").classList.toggle("acik", sec === "cm");
+        document.getElementById("zoomYavas").classList.toggle("acik", zoom === "yavas");
+        document.getElementById("zoomNormal").classList.toggle("acik", zoom === "normal");
+        document.getElementById("zoomHizli").classList.toggle("acik", zoom === "hizli");
+      }
+      function don() { window.location.href = "./index.html"; }
+      document.getElementById("mmBtn").addEventListener("click", function () { sec = "mm"; goster(); });
+      document.getElementById("cmBtn").addEventListener("click", function () { sec = "cm"; goster(); });
+      document.getElementById("zoomYavas").addEventListener("click", function () { zoom = "yavas"; goster(); });
+      document.getElementById("zoomNormal").addEventListener("click", function () { zoom = "normal"; goster(); });
+      document.getElementById("zoomHizli").addEventListener("click", function () { zoom = "hizli"; goster(); });
+      document.getElementById("geriBtn").addEventListener("click", don);
+      document.getElementById("altGeri").addEventListener("click", don);
+      document.getElementById("kaydetBtn").addEventListener("click", function () {
+        O.yaz(sec);
+        localStorage.setItem(ZOOM_ANAHTAR, zoom);
+        document.getElementById("durum").textContent = "Kayıt: " + sec + ", zoom " + zoom + ".";
+      });
+      goster();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+{
+  "sablon_kaynak": "Ömer, 2026-10-06",
+  "acik_kaynak": [
+    "Sachsenküchen raster",
+    "Impuls Küchen typenliste 2025",
+    "UK ve İrlanda mutfak ızgarası"
+  ],
+  "not": "Sıra şablondaki standart genişlikleri kullanır. duz_kasa false köşedir, düz sıraya girmez. acik_ek sıraya girmez.",
+  "sablon": {
+    "baza": [
+      {"en": 150, "ad": "Dar şişelik / havluluk"},
+      {"en": 300, "ad": "Tek kapaklı dar"},
+      {"en": 400, "ad": "Tek kapaklı standart"},
+      {"en": 450, "ad": "Tek kapaklı standart"},
+      {"en": 600, "ad": "Çift kapak veya fırın"},
+      {"en": 800, "ad": "Geniş çift kapak, evye veya tencere çekmecesi"},
+      {"en": 900, "ad": "Geniş çift kapak, evye veya tencere çekmecesi"},
+      {"en": 1000, "ad": "Köşe veya özel alt", "duz_kasa": false},
+      {"en": 1200, "ad": "Köşe veya özel alt", "duz_kasa": false}
+    ],
+    "duvar": [
+      {"en": 300},
+      {"en": 450},
+      {"en": 600},
+      {"en": 800},
+      {"en": 900}
+    ],
+    "boy": [
+      {"en": 600, "ad": "Kiler, fırın-mikrodalga kolon"}
+    ]
+  },
+  "acik_ek": {
+    "baza": [
+      {"en": 500, "kaynak": ["Sachsenküchen", "Impuls", "UK/İrlanda"]}
+    ],
+    "duvar": [
+      {"en": 400, "kaynak": ["Sachsenküchen", "Impuls", "UK/İrlanda"]},
+      {"en": 500, "kaynak": ["Sachsenküchen", "Impuls", "UK/İrlanda"]},
+      {"en": 1000, "kaynak": ["Sachsenküchen", "Impuls", "UK/İrlanda"]}
+    ],
+    "boy": [
+      {"en": 300, "kaynak": ["Sachsenküchen", "Impuls"]},
+      {"en": 450, "kaynak": ["Sachsenküchen", "Impuls"]},
+      {"en": 500, "kaynak": ["Sachsenküchen", "Impuls"]}
+    ]
+  },
+  "tek_kaynak_yazilmadi": {
+    "baza": [250],
+    "duvar": [250],
+    "boy": [250, 400]
+  }
+}

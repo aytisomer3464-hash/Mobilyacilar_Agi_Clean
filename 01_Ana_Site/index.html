@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Mobilyacılar Ağı</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23c9a227'/%3E%3Cpath d='M8 22V12l8-5 8 5v10H8zm3-2h10v-7.1L16 10l-5 2.9V20z' fill='%231a1a1a'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=kabuk9">
+</head>
+<body class="mod-telefon">
+  <div class="sahne">
+    <div class="cerceve" id="cerceve">
+      <div class="kulak" aria-hidden="true"></div>
+      <header class="ust">
+        <div class="ust-sira">
+          <a class="marka" href="#ana" aria-label="Mobilyacılar Ağı ana sayfa">
+            <svg class="marka-isaret" viewBox="0 0 32 32" aria-hidden="true">
+              <rect width="32" height="32" rx="8" fill="#c9a227"/>
+              <path d="M8 22V12l8-5 8 5v10H8zm3-2h10v-7.1L16 10l-5 2.9V20z" fill="#1a1a1a"/>
+            </svg>
+            <span>Mobilyacılar Ağı</span>
+          </a>
+          <div class="ust-iletisim">
+            <span>Gaziantep OSB · 3. Cadde No:11</span>
+            <a href="tel:+903421234567">0342 123 45 67</a>
+          </div>
+          <div class="hesap">
+            <span id="hesapAvatar" class="hesap-avatar" aria-hidden="true">M</span>
+            <p id="hesapOzet" class="hesap-ozet">Misafir</p>
+            <button type="button" id="girisBtn">Giriş</button>
+            <button type="button" id="kayitBtn" class="sari" hidden>Başla</button>
+          </div>
+        </div>
+      </header>
+
+      <div class="ara-serit">
+        <div class="ws-kayan" aria-label="Acil ve ücretli ilanlar">
+          <span class="ws-kayan-etiket">İLAN</span>
+          <div class="ws-kayan-yol">
+            <p class="ws-kayan-yazi">
+              <b>Acil usta</b> · Bantçı, 3. Cadde ·
+              <b>Satılık yatar</b> · Altendorf ·
+              <b>Kiralık atölye</b> · 180 m² ·
+              <b>Sponsor</b> · Özkan PVC, fason sıra
+            </p>
+          </div>
+        </div>
+        <div class="ara-sira">
+          <button type="button" id="geriBtn" class="geri-dugme" aria-label="Geri" title="Geri">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15.4 4.6 8 12l7.4 7.4 1.5-1.5L11 12l5.9-5.9z"/></svg>
+          </button>
+          <form id="araForm" class="ara" role="search">
+            <label class="gizli" for="araGirdi">Hızlı arama</label>
+            <svg class="ara-isaret" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.8l-.3-.3A6.5 6.5 0 1 0 14 15.5l.3.3v.8l5 5 1.5-1.5-5-5zm-6 0C7 14 5 12 5 9.5S7 5 9.5 5 14 7 14 9.5 12 14 9.5 14z"/></svg>
+            <input id="araGirdi" type="search" name="q" placeholder="Usta, fason, malzeme ara" autocomplete="off">
+            <button type="submit">Ara</button>
+          </form>
+          <button type="button" id="ayarBtn" class="ayar-dugme" aria-label="Ayarlar" title="Ayarlar">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.1 7.1 0 0 0-1.63-.94l-.36-2.54A.49.49 0 0 0 13.9 2h-3.8a.49.49 0 0 0-.49.42l-.36 2.54c-.6.24-1.15.55-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.71 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94L2.83 14.52a.5.5 0 0 0-.12.64l1.92 3.32c.14.24.43.34.69.22l2.39-.96c.48.39 1.03.7 1.63.94l.36 2.54c.05.24.25.42.49.42h3.8c.24 0 .44-.18.49-.42l.36-2.54c.6-.24 1.15-.55 1.63-.94l2.39.96c.26.12.55.02.69-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"/></svg>
+          </button>
+        </div>
+        <div class="kapilar">
+        <nav class="ray" aria-label="Sayfalar" aria-expanded="false">
+          <button type="button" class="ray-btn ray-ana" aria-expanded="false" title="Menüler">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 10 12 3l8 7v10H4V10zm2 8h12v-7.2L12 5.5 6 10.8V18z"/></svg>
+            <span>Menüler</span>
+          </button>
+          <button type="button" class="ray-btn" data-panel="istihdam" aria-pressed="false" title="İstihdam / İş İlanları">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16 11c1.7 0 3-1.3 3-3s-1.3-3-3-3-3 1.3-3 3 1.3 3 3 3zM8 11c1.7 0 3-1.3 3-3S9.7 5 8 5 5 6.3 5 8s1.3 3 3 3zm0 2c-2.7 0-8 1.3-8 4v2h10v-2c0-1.5.7-2.7 1.8-3.6C10.5 13.1 9.3 13 8 13zm8 0c-.4 0-.8 0-1.2.1 1.4.8 2.2 2 2.2 3.4V19h7v-2c0-2.7-5.3-4-8-4z"/></svg>
+            <span>İş</span>
+          </button>
+          <button type="button" class="ray-btn" data-panel="ikinci-el" aria-pressed="false" title="İkinci El Pazarı / Makine İlanları">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM7.2 14h9.4l1.8-8H6.1L5 4H2v2h2l3.6 7.6L6.2 16c-.2.4-.2.8 0 1.2.3.5.8.8 1.4.8H19v-2H8.4l.8-1.6z"/></svg>
+            <span>Makine</span>
+          </button>
+          <button type="button" class="ray-btn" data-panel="reklam" aria-pressed="false" title="Reklam ve Sponsor Alanı">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21 3H3v12h18V3zm-2 10H5V5h14v8zM7 17h2v4H7zm4 0h6v2h-6z"/></svg>
+            <span>Reklam</span>
+          </button>
+          <button type="button" class="ray-btn" data-panel="usta" hidden aria-pressed="false" title="Usta Kayıt ve Profil Yönetimi">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/></svg>
+            <span>Profil</span>
+          </button>
+          <button type="button" class="ray-btn" data-panel="iletisim" aria-pressed="false" title="Adres ve İletişim">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5c-1.4 0-2.5-1.1-2.5-2.5S10.6 6.5 12 6.5s2.5 1.1 2.5 2.5S13.4 11.5 12 11.5z"/></svg>
+            <span>Adres</span>
+          </button>
+        </nav>
+        <button type="button" id="programlarBtn" class="ray-btn programlar-btn" data-panel="programlar" aria-pressed="false" title="Programlar">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 7h4v4H7V7zm6 0h4v4h-4V7zM7 13h4v4H7v-4zm6 0h4v4h-4v-4zM4 4v16h16V4H4zm2 2h12v12H6V6z"/></svg>
+          <span>Programlar</span>
+        </button>
+        </div>
+        <p id="araDurum" class="durum durum-cubuk" hidden></p>
+        <section class="sponsor-pano" aria-label="Sponsor vitrin">
+          <div class="sponsor-ust">
+            <p class="sponsor-bas">Sponsor</p>
+          </div>
+          <div class="sponsor-ray" id="sponsorRay" tabindex="0">
+            <article class="sponsor-kart">
+              <img class="sponsor-gorsel" src="/static/reklam/sponsor-pvc.png" alt="PVC kenar bant rulosu">
+              <p class="sponsor-ad">Özkan PVC</p>
+              <p class="sponsor-not">1–2 mm kenar bant · meşe / beyaz / antrasit stok</p>
+              <p class="sponsor-yer">Gaziantep OSB · 3. Cadde · aynı gün teslim</p>
+            </article>
+            <article class="sponsor-kart">
+              <img class="sponsor-gorsel" src="/static/reklam/sponsor-plaka.png" alt="18 mm laminat plaka paleti">
+              <p class="sponsor-ad">Plaka kampanya</p>
+              <p class="sponsor-not">18 mm laminat · palet indirim bu hafta</p>
+              <p class="sponsor-yer">OSB depo · forklift yükleme</p>
+            </article>
+            <article class="sponsor-kart">
+              <img class="sponsor-gorsel" src="/static/reklam/sponsor-mimar.png" alt="Mutfak render örneği">
+              <p class="sponsor-ad">Mimar proje</p>
+              <p class="sponsor-not">Mutfak ölçü + render · atölyeye teslim</p>
+              <p class="sponsor-yer">Proje ofisi · 5 iş günü çizim</p>
+            </article>
+            <article class="sponsor-kart">
+              <img class="sponsor-gorsel" src="/static/reklam/sponsor-cnc.png" alt="CNC nesting tezgah">
+              <p class="sponsor-ad">Nesting CNC</p>
+              <p class="sponsor-not">Etiket + fire raporu · fason sıra</p>
+              <p class="sponsor-yer">OSB 2. blok · gece vardiya açık</p>
+            </article>
+            <article class="sponsor-kart">
+              <img class="sponsor-gorsel" src="/static/reklam/sponsor-mente.png" alt="Menteşe ve ray aksesuar">
+              <p class="sponsor-ad">Aksesuar depo</p>
+              <p class="sponsor-not">Menteşe · ray · tap · kulp stok</p>
+              <p class="sponsor-yer">3. Cadde · kutu kutu teslim</p>
+            </article>
+            <article class="sponsor-kart">
+              <img class="sponsor-gorsel" src="/static/reklam/sponsor-lake.png" alt="Lake ve cila kapak">
+              <p class="sponsor-ad">Lake / cila</p>
+              <p class="sponsor-not">Kapak boya · mat / parlak</p>
+              <p class="sponsor-yer">İbrahimli boyahane · 3 gün</p>
+            </article>
+            <article class="sponsor-kart">
+              <img class="sponsor-gorsel" src="/static/reklam/sponsor-montaj.png" alt="Montaj ve nakliye ekibi">
+              <p class="sponsor-ad">Montaj ekibi</p>
+              <p class="sponsor-not">Şehir içi teslim + kurulum</p>
+              <p class="sponsor-yer">Gaziantep · 2 kişilik ekip</p>
+            </article>
+          </div>
+          <div class="sponsor-nokta" id="sponsorNokta" role="tablist" aria-label="Sponsor kareleri"></div>
+        </section>
+        <nav class="ev-kare" aria-label="Hızlı kapılar">
+          <button type="button" data-ev="istihdam">
+            <span class="ev-ad">İş</span>
+            <span class="ev-not">İlan ve yevmiye</span>
+          </button>
+          <button type="button" data-ev="ikinci-el">
+            <span class="ev-ad">Makine</span>
+            <span class="ev-not">Satılık / kiralık</span>
+          </button>
+          <button type="button" data-ev="reklam">
+            <span class="ev-ad">Sponsor</span>
+            <span class="ev-not">Tedarik ve vitrin</span>
+          </button>
+          <button type="button" data-ev="canta">
+            <span class="ev-ad">Çanta</span>
+            <span class="ev-not">OCR · ebat · reçete</span>
+          </button>
+        </nav>
+      </div>
+
+      <div class="govde">
+        <div id="cekmecePerde" class="perde" hidden></div>
+        <aside id="cekmece" class="cekmece kapali" data-acik="" inert>
+          <nav class="cekmece-dizin" hidden aria-hidden="true">
+            <p class="cekmece-baslik">Sayfalar</p>
+            <button type="button" class="cekmece-link" data-panel="meydan" hidden>Sanayi Meydanı</button>
+            <button type="button" class="cekmece-link" data-panel="istihdam">İstihdam / İş İlanları</button>
+            <button type="button" class="cekmece-link" data-panel="ikinci-el">İkinci El Pazarı / Makine</button>
+            <button type="button" class="cekmece-link" data-panel="reklam">Reklam ve Sponsor</button>
+            <button type="button" class="cekmece-link" data-panel="usta">Usta Kayıt ve Profil</button>
+            <button type="button" class="cekmece-link" data-panel="programlar">Programlar</button>
+            <button type="button" class="cekmece-link" data-panel="iletisim">Adres ve İletişim</button>
+          </nav>
+          <section data-panel="meydan" class="cekmece-panel cekmece-sohbet" hidden>
+            <h1>Sanayi Meydanı</h1>
+            <p class="cekmece-canli"><span class="nokta" aria-hidden="true"></span> Canlı akış · okumak serbest, yazmak OTP kapısından</p>
+            <form id="panoForm" class="pano-yaz meydan-yaz">
+              <label class="gizli" for="panoSoru">Meydana mesaj</label>
+              <textarea id="panoSoru" rows="2" maxlength="480" placeholder="Soru veya kısa mesaj yaz…"></textarea>
+              <div class="pano-yaz-alt">
+                <label class="gizli" for="panoKonu">Konu</label>
+                <select id="panoKonu">
+                  <option value="sohbet">Sohbet</option>
+                  <option value="ölçü">Ölçü</option>
+                  <option value="kesim">Kesim</option>
+                  <option value="bantlama">Bantlama</option>
+                  <option value="diğer">Diğer</option>
+                </select>
+                <button type="submit">Gönder</button>
+              </div>
+            </form>
+            <div id="meydanAkis" class="pano-liste meydan-akis">
+              <article class="pano-kart">
+                <p class="pano-meta"><span class="pano-etiket">sohbet</span> Hasan Usta · şimdi</p>
+                <h2>18 mm kapakta kerf 3.2 — net boyu nasıl mühürleriz?</h2>
+                <p class="pano-yanit"><strong>Ali Usta:</strong> Kaba kâğıtta kalsın. Net, kerf düşünce mühürlenir.</p>
+              </article>
+              <article class="pano-kart">
+                <p class="pano-meta"><span class="pano-etiket">ölçü</span> Fatma · 2 dk</p>
+                <h2>İç köşede derz 2 mm yetmez gibi. Siz 3 mü basıyorsunuz?</h2>
+                <p class="pano-yanit"><strong>Ömer Usta:</strong> Duvar şaşıysa 2 yetmez. Önce lazer.</p>
+              </article>
+              <article class="pano-kart">
+                <p class="pano-meta"><span class="pano-etiket">bantlama</span> Özkan Kardeşler · 5 dk</p>
+                <h2>PVC 1 mm köşede kılcal çatlak — ısı mı hız mı?</h2>
+                <p class="pano-yanit"><strong>Mehmet:</strong> Radius altına inme. Kafa hızını düşür.</p>
+              </article>
+            </div>
+          </section>
+          <section data-panel="istihdam" class="cekmece-panel" hidden>
+            <h1>İstihdam / İş İlanları</h1>
+            <p>Tam gün, yevmiye ve part-time. Bu alan yalnız iş ilanına aittir; usta–usta sohbet burada yok.</p>
+            <button type="button" class="meydan-aksiyon cekmece-aksiyon" data-ilan-ac="is">İş ilanı ver</button>
+            <div class="ilan-liste" role="list">
+              <article class="ilan-kart" role="listitem">
+                <p class="ilan-meta"><span class="ilan-etiket">İş</span> Tam gün · 3. Cadde</p>
+                <h2>Montaj ekibi — mutfak</h2>
+                <p class="ilan-detay">2 kişi · sabah 08:00 · kereste ve montaj</p>
+                <p class="ilan-ucret">Ücret görüşmeli</p>
+                <div class="ilan-aksiyon">
+                  <a class="ilan-ara" href="tel:+903421234567">Ara</a>
+                  <a class="ilan-wa" href="https://wa.me/903421234567?text=Montaj%20ekibi%20ilan%C4%B1" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                </div>
+              </article>
+              <article class="ilan-kart" role="listitem">
+                <p class="ilan-meta"><span class="ilan-etiket">İş</span> Part-time · İbrahimli</p>
+                <h2>Bantlama yardımcısı</h2>
+                <p class="ilan-detay">14:00–18:00 · PVC 1–2 mm · tek el yeterli</p>
+                <p class="ilan-ucret">Yevmiye</p>
+                <div class="ilan-aksiyon">
+                  <a class="ilan-ara" href="tel:+903421234567">Ara</a>
+                  <a class="ilan-wa" href="https://wa.me/903421234567?text=Bantlama%20yard%C4%B1mc%C4%B1s%C4%B1" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                </div>
+              </article>
+              <article class="ilan-kart" role="listitem">
+                <p class="ilan-meta"><span class="ilan-etiket">İş</span> Tam gün · OSB</p>
+                <h2>CNC operatör</h2>
+                <p class="ilan-detay">Nesting + etiket · en az 1 yıl</p>
+                <p class="ilan-ucret">Aylık + prim</p>
+                <div class="ilan-aksiyon">
+                  <a class="ilan-ara" href="tel:+903421234567">Ara</a>
+                  <a class="ilan-wa" href="https://wa.me/903421234567?text=CNC%20operat%C3%B6r" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                </div>
+              </article>
+            </div>
+          </section>
+          <section data-panel="ikinci-el" class="cekmece-panel" hidden>
+            <h1>İkinci El Pazarı / Makine İlanları</h1>
+            <p>Yatar, bantlama, CNC ve malzeme. İş ilanı ve sponsor burada durmaz.</p>
+            <button type="button" class="meydan-aksiyon cekmece-aksiyon" data-ilan-ac="makine">Makine ilanı ver</button>
+            <div class="ilan-liste" role="list">
+              <article class="ilan-kart" role="listitem">
+                <p class="ilan-meta"><span class="ilan-etiket">Makine</span> Satılık · 3. Cadde</p>
+                <h2>Altendorf yatar</h2>
+                <p class="ilan-detay">Çalışır durumda · yerinde deneme</p>
+                <p class="ilan-ucret">Fiyat sorulur</p>
+                <div class="ilan-aksiyon">
+                  <a class="ilan-ara" href="tel:+903421234567">Ara</a>
+                  <a class="ilan-wa" href="https://wa.me/903421234567?text=Altendorf%20yatar" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                </div>
+              </article>
+              <article class="ilan-kart" role="listitem">
+                <p class="ilan-meta"><span class="ilan-etiket">Makine</span> Satılık · 2. blok</p>
+                <h2>Bantlama hattı</h2>
+                <p class="ilan-detay">PVC + kenar · 2018 model</p>
+                <p class="ilan-ucret">Teklif alınır</p>
+                <div class="ilan-aksiyon">
+                  <a class="ilan-ara" href="tel:+903421234567">Ara</a>
+                  <a class="ilan-wa" href="https://wa.me/903421234567?text=Bantlama%20hatt%C4%B1" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                </div>
+              </article>
+              <article class="ilan-kart" role="listitem">
+                <p class="ilan-meta"><span class="ilan-etiket">Atölye</span> Kiralık · OSB</p>
+                <h2>180 m² atölye</h2>
+                <p class="ilan-detay">2. blok no:11 · elektrik hazır</p>
+                <p class="ilan-ucret">Aylık kira</p>
+                <div class="ilan-aksiyon">
+                  <a class="ilan-ara" href="tel:+903421234567">Ara</a>
+                  <a class="ilan-wa" href="https://wa.me/903421234567?text=180m2%20at%C3%B6lye" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                </div>
+              </article>
+            </div>
+          </section>
+          <section data-panel="reklam" class="cekmece-panel" hidden>
+            <h1>Reklam ve Sponsor Alanı</h1>
+            <p>Tedarikçi, mimar ve ücretli vitrin. İş ilanı ve makine satışı burada durmaz.</p>
+            <button type="button" class="meydan-aksiyon cekmece-aksiyon" data-ilan-ac="sponsor">Sponsor ilanı ver</button>
+            <div class="ilan-liste" role="list">
+              <article class="ilan-kart ilan-sponsor" role="listitem">
+                <p class="ilan-meta"><span class="ilan-etiket">Sponsor</span> Yemek</p>
+                <h2>Tıktak Pide</h2>
+                <p class="ilan-detay">Yemeksepeti sipariş</p>
+                <p class="ilan-ucret">Dış bağlantı</p>
+                <div class="ilan-aksiyon">
+                  <a class="ilan-wa" href="https://www.yemeksepeti.com/restaurant/lck9/tiktak-pide-lck9" target="_blank" rel="noopener noreferrer">Sipariş ver</a>
+                </div>
+              </article>
+              <article class="ilan-kart ilan-sponsor" role="listitem">
+                <p class="ilan-meta"><span class="ilan-etiket">Sponsor</span> Ücretli · OSB</p>
+                <h2>Özkan PVC — fason sıra</h2>
+                <p class="ilan-detay">1–2 mm · renk stok · aynı gün</p>
+                <p class="ilan-ucret">Vitrin ilanı</p>
+                <div class="ilan-aksiyon">
+                  <a class="ilan-ara" href="tel:+903421234567">Ara</a>
+                  <a class="ilan-wa" href="https://wa.me/903421234567?text=%C3%96zkan%20PVC%20sponsor" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                </div>
+              </article>
+              <article class="ilan-kart ilan-sponsor" role="listitem">
+                <p class="ilan-meta"><span class="ilan-etiket">Sponsor</span> Kampanya</p>
+                <h2>Plaka toptan — 18 mm</h2>
+                <p class="ilan-detay">OSB depo · palet indirim</p>
+                <p class="ilan-ucret">Bu hafta</p>
+                <div class="ilan-aksiyon">
+                  <a class="ilan-ara" href="tel:+903421234567">Ara</a>
+                  <a class="ilan-wa" href="https://wa.me/903421234567?text=Plaka%20kampanya" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                </div>
+              </article>
+              <article class="ilan-kart ilan-sponsor" role="listitem">
+                <p class="ilan-meta"><span class="ilan-etiket">Sponsor</span> Mimar</p>
+                <h2>Proje ofisi — mutfak çizim</h2>
+                <p class="ilan-detay">Ölçü + render · atölyeye teslim</p>
+                <p class="ilan-ucret">B2B vitrin</p>
+                <div class="ilan-aksiyon">
+                  <a class="ilan-ara" href="tel:+903421234567">Ara</a>
+                  <a class="ilan-wa" href="https://wa.me/903421234567?text=Mimar%20proje" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                </div>
+              </article>
+            </div>
+          </section>
+          <section data-panel="usta" class="cekmece-panel" hidden>
+            <h1>Usta Kayıt ve Profil Yönetimi</h1>
+            <p>Profil kapısı. Ölçü okuyucu ve çanta buna bağlı değil.</p>
+            <button type="button" class="cekmece-aksiyon usta-cekmece-kayit">Kayıt / profil aç</button>
+          </section>
+          <section data-panel="programlar" class="cekmece-panel cekmece-programlar" hidden>
+            <div class="program-ust">
+              <button type="button" id="programlarGeriBtn" class="geri-dugme" aria-label="Geri" title="Geri">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15.4 4.6 8 12l7.4 7.4 1.5-1.5L11 12l5.9-5.9z"/></svg>
+              </button>
+            </div>
+            <h1>Programlar</h1>
+            <p class="cekmece-canli">E-Takım giriş kapıları · çanta yerinde kalır</p>
+            <div class="program-kapilar" role="list">
+              <button type="button" class="program-kapi" data-arac="ebatlama" role="listitem" title="Fire Ebatlama">Fire Ebatlama</button>
+              <button type="button" class="program-kapi" data-arac="elle" role="listitem" title="Mobilya İmalat Akıllı Reçete">Mobilya İmalat Akıllı Reçete</button>
+              <button type="button" class="program-kapi" data-arac="tel" role="listitem" title="Tel çizim">Tel çizim</button>
+              <button type="button" class="program-kapi" data-arac="ocr" role="listitem" title="OCR ölçü">OCR ölçü</button>
+            </div>
+          </section>
+          <section data-panel="iletisim" class="cekmece-panel" hidden>
+            <h1>Adres ve İletişim</h1>
+            <p>Merkez ofis ve sanayi hattı. Sipariş motoru değil, yol tarifi.</p>
+            <article class="kart"><strong>Adres</strong><span>Gaziantep OSB, 3. Cadde No:11</span></article>
+            <article class="kart"><strong>Telefon</strong><span>0342 123 45 67</span></article>
+            <article class="kart"><strong>E-posta</strong><span>destek@mobilyacilaragi.local</span></article>
+          </section>
+        </aside>
+
+        <main id="ana">
+          <section class="pano modul" data-panel="meydan" aria-label="Sanayi Meydanı" hidden>
+            <div class="pano-bas">
+              <h1>Sanayi Meydanı</h1>
+              <p>Canlı akış ve OTP yazışma soldaki çekmecede. Çanta açıkken bu yedek görünür.</p>
+            </div>
+            <div id="panoListe" class="pano-liste">
+              <article class="pano-kart">
+                <p class="pano-meta"><span class="pano-etiket">kesim</span> Hasan Usta · 3. Cadde</p>
+                <h2>18 mm kapakta kerf 3.2 — net boyu nasıl mühürleriz?</h2>
+                <p>Kroki 720 yazıyor, testere 3.2 alıyor. Ustalık JSON’da net mi yoksa kaba mı duracak?</p>
+                <p class="pano-yanit"><strong>Cevap · Ali Usta:</strong> Kaba ölçü kâğıtta kalsın. Net, kerf düşülünce mühürlenir. Şüpheli satır kesime gitmez.</p>
+              </article>
+              <article class="pano-kart">
+                <p class="pano-meta"><span class="pano-etiket">ölçü</span> Fatma · İbrahimli</p>
+                <h2>İç köşe dolapta derz 2 mm yetmez gibi</h2>
+                <p>Duvar 91.4, iki yan 18+18. Kapak payını 2 mi 3 mü basıyorsunuz?</p>
+                <p class="pano-yanit"><strong>Cevap · Ömer Usta:</strong> Duvar şaşıysa 2 yetmez. Önce lazer, sonra 3 mm pay; usta bakmadan sipariş yok.</p>
+              </article>
+              <article class="pano-kart">
+                <p class="pano-meta"><span class="pano-etiket">bantlama</span> Özkan Kardeşler</p>
+                <h2>PVC 1 mm köşede kılcal çatlak</h2>
+                <p>Isı düşük mü, yoksa radius küçük mü? Aynı rulo başka işte temiz.</p>
+                <p class="pano-yanit"><strong>Cevap · Bantçı Mehmet:</strong> Köşe 2 mm radius altına inme. Isıyı değil, kafa hızını düşür.</p>
+              </article>
+            </div>
+          </section>
+
+          <section class="modul" data-panel="istihdam" hidden>
+            <h1>İstihdam / İş İlanları</h1>
+            <p>Tam gün, yevmiye ve part-time. Usta–usta sohbet burada yok.</p>
+            <button type="button" class="meydan-aksiyon" data-ilan-ac="is">İş ilanı ver</button>
+            <div class="ilan-liste" role="list">
+              <article class="ilan-kart" role="listitem">
+                <p class="ilan-meta"><span class="ilan-etiket">İş</span> Tam gün · 3. Cadde</p>
+                <h2>Montaj ekibi — mutfak</h2>
+                <p class="ilan-detay">2 kişi · sabah 08:00 · kereste ve montaj</p>
+                <p class="ilan-ucret">Ücret görüşmeli</p>
+                <div class="ilan-aksiyon">
+                  <a class="ilan-ara" href="tel:+903421234567">Ara</a>
+                  <a class="ilan-wa" href="https://wa.me/903421234567?text=Montaj%20ekibi%20ilan%C4%B1" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                </div>
+              </article>
+              <article class="ilan-kart" role="listitem">
+                <p class="ilan-meta"><span class="ilan-etiket">İş</span> Part-time · İbrahimli</p>
+                <h2>Bantlama yardımcısı</h2>
+                <p class="ilan-detay">14:00–18:00 · PVC 1–2 mm</p>
+                <p class="ilan-ucret">Yevmiye</p>
+                <div class="ilan-aksiyon">
+                  <a class="ilan-ara" href="tel:+903421234567">Ara</a>
+                  <a class="ilan-wa" href="https://wa.me/903421234567?text=Bantlama%20yard%C4%B1mc%C4%B1s%C4%B1" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                </div>
+              </article>
+              <article class="ilan-kart" role="listitem">
+                <p class="ilan-meta"><span class="ilan-etiket">İş</span> Tam gün · OSB</p>
+                <h2>CNC operatör</h2>
+                <p class="ilan-detay">Nesting + etiket · en az 1 yıl</p>
+                <p class="ilan-ucret">Aylık + prim</p>
+                <div class="ilan-aksiyon">
+                  <a class="ilan-ara" href="tel:+903421234567">Ara</a>
+                  <a class="ilan-wa" href="https://wa.me/903421234567?text=CNC%20operat%C3%B6r" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                </div>
+              </article>
+            </div>
+          </section>
+          <section class="modul" data-panel="ikinci-el" hidden>
+            <h1>İkinci El Pazarı / Makine İlanları</h1>
+            <p>Makine ve malzeme. İş ilanı ve sponsor burada durmaz.</p>
+            <button type="button" class="meydan-aksiyon" data-ilan-ac="makine">Makine ilanı ver</button>
+            <div class="ilan-liste" role="list">
+              <article class="ilan-kart" role="listitem">
+                <p class="ilan-meta"><span class="ilan-etiket">Makine</span> Satılık · 3. Cadde</p>
+                <h2>Altendorf yatar</h2>
+                <p class="ilan-detay">Çalışır durumda · yerinde deneme</p>
+                <p class="ilan-ucret">Fiyat sorulur</p>
+                <div class="ilan-aksiyon">
+                  <a class="ilan-ara" href="tel:+903421234567">Ara</a>
+                  <a class="ilan-wa" href="https://wa.me/903421234567?text=Altendorf%20yatar" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                </div>
+              </article>
+              <article class="ilan-kart" role="listitem">
+                <p class="ilan-meta"><span class="ilan-etiket">Makine</span> Satılık · 2. blok</p>
+                <h2>Bantlama hattı</h2>
+                <p class="ilan-detay">PVC + kenar · 2018 model</p>
+                <p class="ilan-ucret">Teklif alınır</p>
+                <div class="ilan-aksiyon">
+                  <a class="ilan-ara" href="tel:+903421234567">Ara</a>
+                  <a class="ilan-wa" href="https://wa.me/903421234567?text=Bantlama%20hatt%C4%B1" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                </div>
+              </article>
+              <article class="ilan-kart" role="listitem">
+                <p class="ilan-meta"><span class="ilan-etiket">Atölye</span> Kiralık · OSB</p>
+                <h2>180 m² atölye</h2>
+                <p class="ilan-detay">2. blok no:11 · elektrik hazır</p>
+                <p class="ilan-ucret">Aylık kira</p>
+                <div class="ilan-aksiyon">
+                  <a class="ilan-ara" href="tel:+903421234567">Ara</a>
+                  <a class="ilan-wa" href="https://wa.me/903421234567?text=180m2%20at%C3%B6lye" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                </div>
+              </article>
+            </div>
+          </section>
+          <section class="modul" data-panel="reklam" hidden>
+            <h1>Reklam ve Sponsor Alanı</h1>
+            <p>Tedarikçi, mimar ve ücretli vitrin. B2B.</p>
+            <button type="button" class="meydan-aksiyon" data-ilan-ac="sponsor">Sponsor ilanı ver</button>
+            <div class="ilan-liste" role="list">
+              <article class="ilan-kart ilan-sponsor" role="listitem">
+                <p class="ilan-meta"><span class="ilan-etiket">Sponsor</span> Yemek</p>
+                <h2>Tıktak Pide</h2>
+                <p class="ilan-detay">Yemeksepeti sipariş</p>
+                <p class="ilan-ucret">Dış bağlantı</p>
+                <div class="ilan-aksiyon">
+                  <a class="ilan-wa" href="https://www.yemeksepeti.com/restaurant/lck9/tiktak-pide-lck9" target="_blank" rel="noopener noreferrer">Sipariş ver</a>
+                </div>
+              </article>
+              <article class="ilan-kart ilan-sponsor" role="listitem">
+                <p class="ilan-meta"><span class="ilan-etiket">Sponsor</span> Ücretli · OSB</p>
+                <h2>Özkan PVC — fason sıra</h2>
+                <p class="ilan-detay">1–2 mm · renk stok · aynı gün</p>
+                <p class="ilan-ucret">Vitrin ilanı</p>
+                <div class="ilan-aksiyon">
+                  <a class="ilan-ara" href="tel:+903421234567">Ara</a>
+                  <a class="ilan-wa" href="https://wa.me/903421234567?text=%C3%96zkan%20PVC%20sponsor" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                </div>
+              </article>
+              <article class="ilan-kart ilan-sponsor" role="listitem">
+                <p class="ilan-meta"><span class="ilan-etiket">Sponsor</span> Kampanya</p>
+                <h2>Plaka toptan — 18 mm</h2>
+                <p class="ilan-detay">OSB depo · palet indirim</p>
+                <p class="ilan-ucret">Bu hafta</p>
+                <div class="ilan-aksiyon">
+                  <a class="ilan-ara" href="tel:+903421234567">Ara</a>
+                  <a class="ilan-wa" href="https://wa.me/903421234567?text=Plaka%20kampanya" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                </div>
+              </article>
+              <article class="ilan-kart ilan-sponsor" role="listitem">
+                <p class="ilan-meta"><span class="ilan-etiket">Sponsor</span> Mimar</p>
+                <h2>Proje ofisi — mutfak çizim</h2>
+                <p class="ilan-detay">Ölçü + render · atölyeye teslim</p>
+                <p class="ilan-ucret">B2B vitrin</p>
+                <div class="ilan-aksiyon">
+                  <a class="ilan-ara" href="tel:+903421234567">Ara</a>
+                  <a class="ilan-wa" href="https://wa.me/903421234567?text=Mimar%20proje" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                </div>
+              </article>
+            </div>
+          </section>
+          <section class="modul" data-panel="usta" hidden>
+            <h1>Usta Kayıt ve Profil Yönetimi</h1>
+            <p>Profil kapısı. Ölçü okuma ve çanta buna bağlı değil.</p>
+            <button type="button" id="ustaKayitAc" class="meydan-aksiyon">Kayıt / profil aç</button>
+          </section>
+          <section class="modul" data-panel="programlar" hidden>
+            <h1>Programlar</h1>
+            <p>E-Takım giriş kapıları. Çanta sağ altta sabit kalır.</p>
+          </section>
+          <section class="modul" data-panel="iletisim" hidden>
+            <h1>Adres ve iletişim</h1>
+            <p>Merkez ofis ve sanayi hattı. Sipariş motoru değil, yol tarifi.</p>
+            <article class="kart"><strong>Adres</strong><span>Gaziantep OSB, 3. Cadde No:11</span></article>
+            <article class="kart"><strong>Telefon</strong><span>0342 123 45 67</span></article>
+            <article class="kart"><strong>E-posta</strong><span>destek@mobilyacilaragi.local</span></article>
+          </section>
+        </main>
+      </div>
+
+      <footer class="alt">
+        <p>Mobilyacılar Ağı · Gaziantep OSB, 3. Cadde No:11</p>
+        <p>
+          <a href="tel:+903421234567">0342 123 45 67</a>
+          ·
+          <a href="mailto:destek@mobilyacilaragi.local">destek@mobilyacilaragi.local</a>
+        </p>
+        <p class="alt-durum"><span class="nokta" aria-hidden="true"></span> Sistem açık · OCR ayrı kapı</p>
+      </footer>
+
+      <div class="canta-sahne">
+        <div class="canta-dock" id="cantaDock">
+          <div class="canta-aletler" id="cantaAletler" hidden>
+            <button type="button" class="canta-arac" data-slot="1" data-arac="ebatlama" title="Fire Ebatlama — doğrudan aç">Fire Ebatlama</button>
+            <button type="button" class="canta-arac" data-slot="2" data-arac="elle" title="Mobilya İmalat Akıllı Reçete">Mobilya İmalat Akıllı Reçete</button>
+            <button type="button" class="canta-arac" data-slot="3" data-arac="tel" title="Tel kafes çizim">Tel çizim</button>
+            <button type="button" class="canta-arac" data-slot="4" data-arac="ocr" title="OCR ölçü okuyucu — ayrı kapı">OCR ölçü</button>
+          </div>
+          <button type="button" id="cantaBtn" class="canta-sandik" aria-expanded="false" aria-controls="cantaAletler" title="E-Takım Çantası">
+            <span class="canta-kulp" aria-hidden="true"></span>
+            <span class="canta-kapak" aria-hidden="true"></span>
+            <span class="canta-govde" aria-hidden="true"></span>
+            <span class="canta-kilit" aria-hidden="true"></span>
+            <span class="canta-yazi">E-Takım<br>Çantası</span>
+          </button>
+        </div>
+      </div>
+      <button type="button" id="cantaDon" class="canta-don" hidden>Çantaya Dön</button>
+      <aside id="ocrPanel" class="ebatlama-panel" hidden>
+        <p class="kara-baslik">OCR ölçü okuyucu</p>
+        <p class="kara-ipucu">Ayrı kapı. Bu siteye gömülmez.</p>
+        <a id="ocrLink" class="kara-aksiyon" href="/okuyucu/" target="_blank" rel="noopener noreferrer">Okuyucuyu ayrı aç</a>
+      </aside>
+      <aside id="telPanel" class="ebatlama-panel" hidden>
+        <p class="kara-baslik">Tel çizim</p>
+        <p class="kara-ipucu">Tel kafes. 3D yok. Usta bakmadan kesime gitmez.</p>
+        <canvas id="telTuval" class="tel-tuval" width="320" height="200" aria-label="Tel kafes tuvali"></canvas>
+        <button type="button" id="telTemizle" class="soluk-btn">Tuvali sil</button>
+      </aside>
+      <aside id="ebatlamaPanel" class="ebatlama-panel" hidden>
+        <p class="kara-baslik">Ebatlama</p>
+        <p class="kara-ipucu">Kaba alan hesabı burada. Asıl motor ayrı kapı (Fire Okuyucu).</p>
+        <a id="ebatlamaLink" class="kara-aksiyon" href="/ebatlama/" target="_blank" rel="noopener noreferrer">Fire ebatlamayı ayrı aç</a>
+        <div class="ebatlama-sira">
+          <p>
+            <label class="lan-etiket" for="ebatPlakaBoy">Plaka boy (mm)</label>
+            <input id="ebatPlakaBoy" type="number" min="1" max="6000" value="3660" inputmode="numeric">
+          </p>
+          <p>
+            <label class="lan-etiket" for="ebatPlakaEn">Plaka en (mm)</label>
+            <input id="ebatPlakaEn" type="number" min="1" max="6000" value="1830" inputmode="numeric">
+          </p>
+          <p>
+            <label class="lan-etiket" for="ebatKerf">Kerf (mm)</label>
+            <input id="ebatKerf" type="number" min="0" max="20" step="0.1" value="3.2" inputmode="decimal">
+          </p>
+        </div>
+        <label class="lan-etiket" for="ebatParcalar">Parçalar — boy x en x adet</label>
+        <textarea id="ebatParcalar" rows="5" maxlength="2000" placeholder="720 x 400 x 2&#10;560 x 350 x 4"></textarea>
+        <button type="button" id="ebatHesap" class="kara-aksiyon">Kaba hesabı göster</button>
+        <p id="ebatSonuc" class="kara-ipucu" hidden></p>
+      </aside>
+      <div id="cantaPerde" class="perde canta-perde" hidden></div>
+      <div id="karaPerde" class="kara-perde" hidden></div>
+      <aside id="karaKutuPanel" class="kara-panel" hidden>
+        <p class="kara-baslik">Öneri &amp; Hata Bildir</p>
+        <p id="karaModul" class="kara-modul">Modül: —</p>
+        <p id="karaDurum" class="kara-ipucu">Dinleniyor… 7 sn sessizlikte durur.</p>
+        <div id="karaListe" class="kara-liste" aria-label="Geçmiş konuşma — dokunup kutuya al"></div>
+        <label class="gizli" for="karaMetin">Öneri metni</label>
+        <textarea id="karaMetin" rows="4" maxlength="2000" placeholder="Konuşunca yazı buraya düşer. Satıra dokunup düzeltebilirsin."></textarea>
+        <button type="button" id="karaGonder" class="kara-aksiyon">Sunucuya Gönder</button>
+      </aside>
+      <button type="button" id="karaKutuBtn" class="kara-kutu-btn" aria-expanded="false" aria-controls="karaKutuPanel" aria-label="Öneri ve hata bildir" title="Öneri ve hata bildir">
+        <svg class="kara-kutu-yazi" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.49 6-3.31 6-6.72h-1.7z"/></svg>
+      </button>
+      <p id="ustaTost" class="usta-tost" hidden role="status">Eline sağlık usta, taş gibi oldu!</p>
+    </div>
+  </div>
+
+  <dialog id="hesapDialog" class="dialog">
+    <div id="adimBasla">
+      <p class="dialog-baslik">Önce iş, sonra form</p>
+      <p>Kâğıdı oku → mühürle → WhatsApp. Ad-soyad, telefon ve dükkan şimdi şart değil.</p>
+      <label class="lan-etiket" for="ustaAd">İsim (isteğe bağlı)</label>
+      <input id="ustaAd" type="text" maxlength="40" autocomplete="nickname" placeholder="Örn. Ömer Usta">
+      <button type="button" id="adKaydet">Kaydet ve çantayı aç</button>
+      <button type="button" id="adAtla" class="soluk-btn">İsimsiz devam et — çantayı aç</button>
+    </div>
+    <div id="adimProfil" hidden>
+      <p class="dialog-baslik">Bir dakikan yeter, usta</p>
+      <p id="profilNot">Bilgilerinizi girmek size sitede kısa sürede iş paslanmasını, iş bulmanızı ve özel araçlara ulaşmanızı sağlar, tokin kazandırır.</p>
+      <label class="lan-etiket" for="ustaDukkan">Dükkan / atölye</label>
+      <input id="ustaDukkan" type="text" maxlength="60" autocomplete="organization" placeholder="Örn. 3. Cadde mobilya">
+      <label class="lan-etiket" for="ustaTel">Telefon (isteğe bağlı)</label>
+      <input id="ustaTel" type="tel" maxlength="16" autocomplete="tel" placeholder="05xx">
+      <button type="button" id="profilKaydet">Kaydet</button>
+      <button type="button" id="profilAtla" class="soluk-btn">Sonra</button>
+    </div>
+    <div id="adimDogrula" hidden>
+      <p class="dialog-baslik">Meydan güvencesi</p>
+      <p>Yazışma ve ilan için ad soyad ile telefon doğrulaması şart. Sahte hesap ve küfürlü paylaşım buradan geçmez. Ölçü okuma ve çanta buna bağlı değil. SMS operatörü henüz yok; deneme kodu bu ekranda görünür.</p>
+      <label class="lan-etiket" for="dogrulaAd">Ad soyad</label>
+      <input id="dogrulaAd" type="text" maxlength="60" autocomplete="name" placeholder="Ad soyad">
+      <label class="lan-etiket" for="dogrulaTel">Telefon</label>
+      <input id="dogrulaTel" type="tel" maxlength="16" autocomplete="tel" placeholder="05xx">
+      <button type="button" id="kodGonder">Kod üret</button>
+      <p id="kodGoster" class="durum" hidden></p>
+      <label class="lan-etiket" for="dogrulaKod">Doğrulama kodu</label>
+      <input id="dogrulaKod" type="text" inputmode="numeric" maxlength="4" autocomplete="one-time-code" placeholder="4 hane">
+      <button type="button" id="kodOnay">Kapıyı aç</button>
+    </div>
+    <form method="dialog">
+      <button type="submit" value="kapat" class="soluk-btn">Kapat</button>
+    </form>
+  </dialog>
+
+  <dialog id="ilanDialog" class="dialog">
+    <p class="dialog-baslik">İlan ver</p>
+    <p class="ilan-form-not">Kısa form · sunucu yok; kart bu oturumda listede durur. İlan sahibine Ara / WhatsApp açılır.</p>
+    <label class="lan-etiket" for="ilanTur">Tür</label>
+    <select id="ilanTur">
+      <option value="is">İş ilanı</option>
+      <option value="makine">Makine / atölye</option>
+      <option value="sponsor">Sponsor / reklam</option>
+    </select>
+    <label class="lan-etiket" for="ilanBaslik">Başlık</label>
+    <input id="ilanBaslik" type="text" maxlength="80" required placeholder="Örn. Bantlama yardımcısı">
+    <label class="lan-etiket" for="ilanYer">Yer</label>
+    <input id="ilanYer" type="text" maxlength="60" placeholder="Örn. 3. Cadde · OSB">
+    <label class="lan-etiket" for="ilanUcret">Ücret / fiyat</label>
+    <input id="ilanUcret" type="text" maxlength="40" placeholder="Örn. Yevmiye · Fiyat sorulur">
+    <label class="lan-etiket" for="ilanDetay">Kısa açıklama</label>
+    <textarea id="ilanDetay" rows="2" maxlength="160" placeholder="Ne arıyorsun / ne satıyorsun"></textarea>
+    <label class="lan-etiket" for="ilanTel">İletişim telefon</label>
+    <input id="ilanTel" type="tel" maxlength="16" inputmode="tel" placeholder="05xx">
+    <button type="button" id="ilanGonder">Listeye ekle</button>
+    <button type="button" id="ilanIptal" class="soluk-btn">Vazgeç</button>
+  </dialog>
+
+  <script src="app.js?v=canta4slot7"></script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Duvar / Gereçler</title>
+  <style>
+    :root {
+      --marka: #e8e4dc;
+      --aksiyon: #fb923c;
+      --zemin: #2c3136;
+      --panel: #1a1e22;
+      --yazi: #e8e4dc;
+      --soluk: #a8a49c;
+      --cizgi: #3a4046;
+      --dis: #2c3136;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; height: 100%;
+      font: 15px/1.5 Roboto, "Segoe UI", system-ui, sans-serif;
+      background: var(--dis); color: var(--yazi);
+    }
+    .sahne {
+      max-width: 440px; margin: 0 auto; min-height: 100dvh;
+      padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+      display: flex; flex-direction: column;
+      background: var(--zemin);
+    }
+    label { display: block; margin: 0 0 10px; font-weight: 700; color: var(--yazi); }
+    input, select {
+      width: 100%; min-height: 48px; margin-top: 4px; padding: 8px 12px;
+      border-radius: 12px; border: 1px solid var(--cizgi); background: var(--panel); color: var(--yazi); font-size: 1.05rem;
+    }
+    .sira { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    button {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 48px; width: 100%; margin-top: 8px; border: 0; border-radius: 12px;
+      background: #3a4046; color: #e8e4dc; border: 1px solid #3a4046; font-weight: 800; font-size: 1rem; cursor: pointer;
+    }
+    #kaydetBtn, button[data-kaydet] { background: var(--aksiyon); color: #7c2d12; border: 0; }
+    button.geri {
+      width: auto; min-width: 96px; margin: 0; padding: 0 18px;
+      background: var(--panel); color: var(--marka); border: 1px solid var(--cizgi);
+    }
+    button.baslik {
+      margin-top: 8px; background: var(--panel); color: var(--marka);
+      border: 1px solid var(--cizgi); justify-content: space-between; padding: 0 16px;
+    }
+    button.baslik.acik { background: var(--aksiyon); color: #7c2d12; border-color: var(--aksiyon); }
+    .kalem .form {
+      display: none; margin: 0 0 8px; padding: 12px;
+      background: var(--panel); border: 1px solid var(--cizgi); border-radius: 12px;
+    }
+    .kalem.acik .form { display: block; }
+    h1 { margin: 16px 0 4px; font-size: 1.15rem; color: var(--marka); }
+    .ipucu { margin: 0 0 8px; color: var(--soluk); }
+    #durum { min-height: 1.6em; margin: 8px 0 0; color: var(--soluk); }
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .sahne { max-width: 820px; padding: 16px 24px calc(16px + env(safe-area-inset-bottom, 0px)); }
+    }
+    @media (min-width: 1024px) {
+      .sahne {
+        max-width: none; width: 100%; min-height: 100dvh;
+        padding: 16px 28px calc(16px + env(safe-area-inset-bottom, 0px));
+      }
+      .liste { width: 100%; max-width: 560px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sahne">
+    <button type="button" class="geri" id="geriBtn">Geri</button>
+    <h1>Duvar / Gereçler</h1>
+    <p class="ipucu">Standart ölçü. Boş bırakılabilir. Özel ürün yok.</p>
+    <div class="liste" id="gerecListe"></div>
+    <p id="durum" role="status"></p>
+  </div>
+  <script src="./olcu.js"></script>
+  <script src="./duvar_gerec.js"></script>
+</body>
+</html>

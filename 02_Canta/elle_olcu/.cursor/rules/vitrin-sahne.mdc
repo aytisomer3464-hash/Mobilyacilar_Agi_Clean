@@ -1,0 +1,29 @@
+---
+description: Vitrin sahne katmanları — yalnız reçete vitrin ve duvar motorunda
+globs: "**/elle_olcu/duvar/vitrin/**,**/elle_olcu/duvar/motor.py"
+alwaysApply: false
+---
+
+# Vitrin sahne (her çizim/UI işinden önce)
+
+Kod yazmadan önce kıyas: bu katmanlar duruyor mu? Kalkacaksa **önce usta satırında söyle**; sessiz silme yok.
+
+## Korunacak
+
+- Sonsuzluk yeri: 100 cm × 100 cm kare; zoom ile odayla hareket; kare yeterince büyükse içine ölçü (`MagiOlcu`).
+- Pusula: Kuzey / Güney / Doğu / Batı belirgin (ok + yazı); kus bakışı ve 3D yer.
+- Cetvel: oda en/boy her zaman; seçili veya sürüklenen parçada parça ölçüleri. Koyu zeminde sarı/açık yazı.
+- Zemin mühür + duvar elemanları: kilitle/Uygula/Bitir ve menüden dönüş `magi_tur_kayit` ile kalır. `odaAyarla` dolu odayı sıfırlamaz.
+- `motor.py` ve `duvar_motor.js` içindeki `STANDART` aynı kalır.
+- `vitrin.js` / `vitrin_ciz.js` / ilgili CSS değişince `index.html` içindeki `?v=` artar.
+
+Dosyalar: `elle_olcu/duvar/vitrin/vitrin_ciz.js`, `vitrin.js`, `index.html`, `duvar_motor.js`; `elle_olcu/duvar/motor.py`.
+
+## Yapma
+
+- `cizAtolyeAlan` yalnızca `clearRect` / düz dolgu.
+- Cetveli yalnız sürüklerken çizmek.
+- Pusula/cetvel rengini zeminle aynı koyulukta bırakmak.
+- “Hız / sade” diye ızgara, pusula, cetvel veya tur kaydını atlamak.
+
+Yeni boya katmanı eklerken eski katmanı üstüne kapatırsan kontrastı kontrol et.

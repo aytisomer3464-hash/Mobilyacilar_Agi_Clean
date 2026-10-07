@@ -1,0 +1,15 @@
+.venv/
+.env
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+*.lock
+gecmis_kayitlar.json
+build/
+dist/
+hata_log.txt
+veri/arsiv/
+veri/ogrenme/
+veri/hatalar/

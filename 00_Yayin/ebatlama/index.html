@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<script src="./vitrin_kapi.js"></script>
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Ebatlama — telefon vitrin</title>
+  <link rel="stylesheet" href="style.css?v=temaA3" />
+  <link rel="stylesheet" href="kabuk.css?v=kabuk1" />
+</head>
+<body>
+  <p class="not">Cep — motor telefonda. PC gerekmez.</p>
+  <div class="phone">
+    <header>
+      <span id="baslik">Ebatlama</span>
+      <span class="ust-sag">
+        <span id="motor-durum" class="motor-acik" role="status">Motor açık</span>
+      </span>
+    </header>
+    <main>
+      <section id="k0" class="ekran on">
+        <div class="baslik-satir">
+          <h1>Ebatlama</h1>
+          <button class="ana-ayar" type="button" id="btn-ana-ayar" aria-label="Atölye ayarları" title="Atölye ayarları">⚙</button>
+        </div>
+        <button class="tam ana" type="button" data-git="k1-fire" data-mod="fire">Fire Ebatlama</button>
+        <button class="tam soluk" type="button" data-git="k1-plaka" data-mod="plaka">Plaka Ebatlama</button>
+      </section>
+
+      <section id="k1-fire-ekle" class="ekran">
+        <div class="ekle-ust">
+          <button class="geri" type="button" data-git="k1-fire" aria-label="Liste" title="Liste">←</button>
+          <button class="anahtar l-damar" type="button" aria-pressed="false">
+            <span>Su yönünü koru — döndürme yok</span>
+            <span class="anahtar-kutu" aria-hidden="true"></span>
+          </button>
+        </div>
+        <div class="form-satir">
+          <label class="olcu-satir">
+            <span class="olcu-ad">Kalınlık</span>
+            <input class="sayi" id="f-kalinlik" inputmode="numeric" placeholder="18">
+            <span class="olcu-birim">mm</span>
+          </label>
+          <label class="olcu-satir">
+            <span class="olcu-ad">Boy</span>
+            <input class="sayi" id="f-boy" inputmode="decimal">
+            <span class="olcu-birim" data-birim-etiket>mm</span>
+          </label>
+          <label class="olcu-satir">
+            <span class="olcu-ad">En</span>
+            <input class="sayi" id="f-en" inputmode="decimal">
+            <span class="olcu-birim" data-birim-etiket>mm</span>
+          </label>
+          <label class="olcu-satir">
+            <span class="olcu-ad">Adet</span>
+            <input class="sayi kisa" id="f-adet" inputmode="numeric" value="1">
+          </label>
+        </div>
+        <button class="tam" type="button" id="btn-ekle">Havuza ekle</button>
+        <p class="satir-not olcu-uyari" hidden></p>
+        <p class="satir-not" data-bos>Boş — henüz fire yok.</p>
+        <table class="havuz-tablo havuz-baslik">
+          <thead><tr>
+            <th>No</th>
+            <th>Boy <span data-birim-etiket>mm</span></th>
+            <th>En <span data-birim-etiket>mm</span></th>
+            <th>Adet</th>
+            <th>Kalınlık mm</th>
+            <th></th>
+          </tr></thead>
+        </table>
+        <div class="kaydir">
+          <table class="havuz-tablo">
+            <tbody data-havuz data-sil-col></tbody>
+          </table>
+        </div>
+        <button class="tam ana" type="button" data-git="k1-fire">Devam et</button>
+      </section>
+
+      <section id="k1-plaka-ekle" class="ekran">
+        <button class="geri" type="button" data-git="k1-plaka" aria-label="Liste" title="Liste">←</button>
+        <button class="anahtar l-damar" type="button" aria-pressed="false">
+          <span>Su yönünü koru — döndürme yok</span>
+          <span class="anahtar-kutu" aria-hidden="true"></span>
+        </button>
+        <p class="satir-not levha-kayitli" hidden></p>
+        <label class="olcu-satir">
+          <span class="olcu-ad">Şablon</span>
+          <select class="levha-preset"></select>
+        </label>
+        <button class="tam soluk btn-ozel-olcu" type="button">Özel ölçü gir</button>
+        <div class="levha-ozel form-satir" hidden>
+          <label class="olcu-satir">
+            <span class="olcu-ad">En</span>
+            <input class="sayi l-en" inputmode="decimal">
+            <span class="olcu-birim" data-birim-etiket>mm</span>
+          </label>
+          <label class="olcu-satir">
+            <span class="olcu-ad">Boy</span>
+            <input class="sayi l-boy" inputmode="decimal">
+            <span class="olcu-birim" data-birim-etiket>mm</span>
+          </label>
+          <label class="olcu-satir">
+            <span class="olcu-ad">Kalınlık</span>
+            <input class="sayi l-kalinlik" inputmode="numeric" placeholder="18">
+            <span class="olcu-birim">mm</span>
+          </label>
+        </div>
+        <p class="satir-not levha-uyari" hidden></p>
+        <button class="tam ana" type="button" data-git="k1-plaka">Devam et</button>
+      </section>
+
+      <section id="k1-fire" class="ekran k2">
+        <div class="k2-ust">
+          <button class="geri" type="button" data-git="k0" aria-label="Kapılar" title="Kapılar">←</button>
+          <h1>Kesilecek liste</h1>
+        </div>
+        <button class="tam ocr-dugme btn-ocr" type="button" title="OCR ile Ekle">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 4 7.2 6H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-3.2L15 4H9zm3 13.2A4.2 4.2 0 1 1 16.2 13 4.2 4.2 0 0 1 12 17.2zM12 10.5A2.5 2.5 0 1 0 14.5 13 2.5 2.5 0 0 0 12 10.5z"/>
+          </svg>
+          OCR ile Ekle
+        </button>
+        <div class="cift-ok k2-deneme">
+          <button class="tam soluk" type="button" id="btn-deneme">Örnek doldur</button>
+          <button class="tam soluk" type="button" id="btn-deneme-sil" hidden>Örneği sil</button>
+        </div>
+        <div class="cift-ok k2-satir">
+          <button class="tam ana btn-havuz-ayar" type="button">Fire levha ekle<span class="rozet" data-rozet>0</span></button>
+          <button class="tam ana btn-ekle-parca" type="button">Parça ekle<span class="rozet" data-rozet-parca>0</span></button>
+        </div>
+        <p class="satir-not liste-bos">Liste boş. Parça ekle.</p>
+        <p class="satir-not liste-hata" hidden></p>
+        <div class="liste-govde ihtiyac-tablo"></div>
+        <div class="alt-bar">
+          <button class="tam btn-hesapla" type="button">Hesapla</button>
+        </div>
+      </section>
+
+      <section id="k1-plaka" class="ekran k2">
+        <div class="k2-ust">
+          <button class="geri" type="button" data-git="k0" aria-label="Kapılar" title="Kapılar">←</button>
+          <h1>Kesilecek liste</h1>
+        </div>
+        <button class="tam ocr-dugme btn-ocr" type="button" title="OCR ile Ekle">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 4 7.2 6H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-3.2L15 4H9zm3 13.2A4.2 4.2 0 1 1 16.2 13 4.2 4.2 0 0 1 12 17.2zM12 10.5A2.5 2.5 0 1 0 14.5 13 2.5 2.5 0 0 0 12 10.5z"/>
+          </svg>
+          OCR ile Ekle
+        </button>
+        <div class="cift-ok k2-satir">
+          <button class="tam ana btn-levha-ayar" type="button">Levha ayarı</button>
+          <button class="tam ana btn-ekle-parca" type="button">Parça ekle<span class="rozet" data-rozet-parca>0</span></button>
+        </div>
+        <p class="satir-not liste-bos">Liste boş. Parça ekle.</p>
+        <p class="satir-not liste-hata" hidden></p>
+        <div class="liste-govde ihtiyac-tablo"></div>
+        <div class="alt-bar">
+          <button class="tam btn-hesapla" type="button">Hesapla</button>
+        </div>
+      </section>
+
+      <section id="k2-fire" class="ekran k3 k3-sade k3-gosterge-kisa">
+        <div class="k3-ust">
+          <button class="geri" type="button" data-git="k1-fire" aria-label="Liste" title="Liste">←</button>
+          <button class="btn-k3-perde" type="button">Liste</button>
+          <button class="btn-sigmayan" type="button" hidden>Sığmayan Liste</button>
+          <button class="btn-senaryo" type="button">Kesimi { } Çevir</button>
+        </div>
+        <div class="gosterge">
+          <div class="gosterge-ic">
+            <div class="g-satir g-satir-uzun"><span class="g-etiket">ÖLÇÜ</span><span class="g-deger" data-k3="olcu">0 satır</span></div>
+            <div class="g-satir g-satir-uzun"><span class="g-etiket">PARÇA</span><span class="g-deger" data-k3="parca">0 adet</span></div>
+            <div class="g-satir g-satir-uzun"><span class="g-etiket">ALAN</span><span class="g-deger" data-k3="alan">0,00 m²</span></div>
+            <div class="g-satir g-satir-uzun"><span class="g-etiket">BANT</span><span class="g-deger" data-k3="bant">0,00 m</span></div>
+            <div class="g-satir"><span class="g-etiket">LEVHA</span><span class="g-deger" data-k3="levha">0 levha</span></div>
+            <div class="g-satir" title="Motorun bu yerleşim stratejisi. Başka kesim sıradakini getirir."><span class="g-etiket">ŞEMA</span><span class="g-deger" data-k3="sema">—</span></div>
+            <div class="g-satir" title="Yerleşimden sonra levhada kalan boş alan."><span class="g-etiket">NET FİRE</span><span class="g-deger" data-k3="fire">0,00 m²</span></div>
+            <div class="g-satir" title="Havuzdan kesime giden fire."><span class="g-etiket">HAVUZ GİTTİ</span><span class="g-deger" data-k3="havuz-gitti">0,00 m²</span></div>
+            <div class="g-satir" title="Havuz alanı × kalınlık m² fiyatı."><span class="g-etiket">TOPLAM</span><span class="g-deger" data-k3="toplam">—</span></div>
+          </div>
+        </div>
+        <div class="k3-panel" data-k3-panel="levha">
+          <div class="serit"></div>
+          <div class="tez" aria-label="Tezgah 3×3 m">
+            <div class="tez-zoom-ust">
+              <span class="tez-zoom-baslik"></span>
+              <button class="btn-tez-zoom" type="button" aria-label="Parçayı ekrana büyüt">Tam</button>
+            </div>
+            <div class="tez-sahne">
+              <div class="tez-skala-y" aria-hidden="true"></div>
+              <div class="tez-cerceve" aria-hidden="true">
+                <div class="tez-cetvel tez-cetvel-sag"></div>
+                <div class="tez-cetvel tez-cetvel-alt"></div>
+                <span class="tez-olcu tez-olcu-ust"></span>
+                <span class="tez-olcu tez-olcu-sol"></span>
+              </div>
+              <div class="tez-zemin">
+                <div class="levha tez-levha"></div>
+              </div>
+              <div class="tez-skala-x" aria-hidden="true"></div>
+              <span class="tez-etiket">3×3 m</span>
+              <button class="btn-tez-mercek" type="button" aria-label="Mercek — basılı tut, sürükle" aria-pressed="false">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="10" cy="10" r="6.2" fill="none" stroke="currentColor" stroke-width="2.4"/>
+                  <path d="M15 15 L21.2 21.2" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </div>
+            <div class="tez-zoom-alt">
+              <span class="tez-zoom-alt-bos"></span>
+              <button class="btn-tez-indir" type="button">İndir</button>
+              <button class="btn-tez-once" type="button" disabled aria-label="Önceki levha">◀</button>
+              <button class="btn-tez-sonra" type="button" disabled aria-label="Sonraki levha">▶</button>
+            </div>
+          </div>
+        </div>
+        <div class="k3-panel" data-k3-panel="liste">
+          <h2 class="k3-liste-baslik">Kesilecek liste</h2>
+          <p class="k3-liste-alt" hidden>Kesilecek liste</p>
+          <p class="adet-oz k3-not">Düzeltme kesilecek listedeki ⚙ ile yapılır.</p>
+          <div class="sonuc-liste"></div>
+        </div>
+        <div class="fire-sigmayan">
+          <h2 class="fire-sigmayan-baslik">Sığmayan liste:</h2>
+          <div class="fire-sigmayan-liste"></div>
+        </div>
+        <div class="alt-bar k3-paylas">
+          <button class="tam btn-cikti-ac" type="button">Çıktı / Paylaş</button>
+        </div>
+      </section>
+
+      <section id="k2-plaka" class="ekran k3 k3-sade k3-gosterge-kisa">
+        <div class="k3-ust">
+          <button class="geri" type="button" data-git="k1-plaka" aria-label="Liste" title="Liste">←</button>
+          <button class="btn-k3-perde" type="button">Liste</button>
+          <button class="btn-sigmayan" type="button" hidden>Fire kurtarır</button>
+          <button class="btn-senaryo" type="button">Kesimi { } Çevir</button>
+        </div>
+        <div class="gosterge">
+          <div class="gosterge-ic">
+            <div class="g-satir g-satir-uzun"><span class="g-etiket">ÖLÇÜ</span><span class="g-deger" data-k3="olcu">0 satır</span></div>
+            <div class="g-satir g-satir-uzun"><span class="g-etiket">PARÇA</span><span class="g-deger" data-k3="parca">0 adet</span></div>
+            <div class="g-satir g-satir-uzun"><span class="g-etiket">ALAN</span><span class="g-deger" data-k3="alan">0,00 m²</span></div>
+            <div class="g-satir g-satir-uzun"><span class="g-etiket">BANT</span><span class="g-deger" data-k3="bant">0,00 m</span></div>
+            <div class="g-satir"><span class="g-etiket">LEVHA</span><span class="g-deger" data-k3="levha">0 levha</span></div>
+            <div class="g-satir" title="Motorun bu yerleşim stratejisi. Başka kesim sıradakini getirir."><span class="g-etiket">ŞEMA</span><span class="g-deger" data-k3="sema">—</span></div>
+            <div class="g-satir" title="Yerleşimden sonra levhada kalan boş alan."><span class="g-etiket">NET FİRE</span><span class="g-deger" data-k3="fire">0,00 m²</span></div>
+            <div class="g-satir" title="Kesilecek alan × kalınlık m² fiyatı."><span class="g-etiket">TOPLAM</span><span class="g-deger" data-k3="toplam">—</span></div>
+          </div>
+        </div>
+        <div class="k3-panel" data-k3-panel="levha">
+          <div class="serit"></div>
+          <div class="tez" aria-label="Tezgah 3×3 m">
+            <div class="tez-zoom-ust">
+              <span class="tez-zoom-baslik"></span>
+              <button class="btn-tez-zoom" type="button" aria-label="Parçayı ekrana büyüt">Tam</button>
+            </div>
+            <div class="tez-sahne">
+              <div class="tez-skala-y" aria-hidden="true"></div>
+              <div class="tez-cerceve" aria-hidden="true">
+                <div class="tez-cetvel tez-cetvel-sag"></div>
+                <div class="tez-cetvel tez-cetvel-alt"></div>
+                <span class="tez-olcu tez-olcu-ust"></span>
+                <span class="tez-olcu tez-olcu-sol"></span>
+              </div>
+              <div class="tez-zemin">
+                <div class="levha tez-levha"></div>
+              </div>
+              <div class="tez-skala-x" aria-hidden="true"></div>
+              <span class="tez-etiket">3×3 m</span>
+              <button class="btn-tez-mercek" type="button" aria-label="Mercek — basılı tut, sürükle" aria-pressed="false">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="10" cy="10" r="6.2" fill="none" stroke="currentColor" stroke-width="2.4"/>
+                  <path d="M15 15 L21.2 21.2" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </div>
+            <div class="tez-zoom-alt">
+              <span class="tez-zoom-alt-bos"></span>
+              <button class="btn-tez-indir" type="button">İndir</button>
+              <button class="btn-tez-once" type="button" disabled aria-label="Önceki levha">◀</button>
+              <button class="btn-tez-sonra" type="button" disabled aria-label="Sonraki levha">▶</button>
+            </div>
+          </div>
+        </div>
+        <div class="k3-panel" data-k3-panel="liste">
+          <h2 class="k3-liste-baslik">Kesilecek liste</h2>
+          <p class="k3-liste-alt" hidden>Kesilecek liste</p>
+          <p class="adet-oz k3-not">Düzeltme kesilecek listedeki ⚙ ile yapılır.</p>
+          <div class="sonuc-liste"></div>
+        </div>
+        <div class="fire-sigmayan">
+          <h2 class="fire-sigmayan-baslik">Havuzdan sığar:</h2>
+          <div class="fire-sigmayan-liste"></div>
+        </div>
+        <div class="alt-bar k3-paylas">
+          <button class="tam btn-cikti-ac" type="button">Çıktı / Paylaş</button>
+        </div>
+      </section>
+    </main>
+    <div class="perde" id="ayar-perde-fire">
+      <div class="ayar-kutu">
+        <h2 class="ayar-baslik">Parça ekle</h2>
+        <p class="sira-yaz">No: <span class="ayar-sira">1</span></p>
+        <div class="pano-ust">
+          <div class="pano-sol">
+            <div class="olcu-blok">
+              <label>Boy <span data-birim-etiket>mm</span> <input class="sayi a-boy" inputmode="decimal"></label>
+            </div>
+            <div class="bant-cift">
+              <button type="button" class="kenar" data-kenar="boy-sol">Boy sol</button>
+              <button type="button" class="kenar" data-kenar="boy-sag">Boy sağ</button>
+            </div>
+            <div class="olcu-blok">
+              <label>En <span data-birim-etiket>mm</span> <input class="sayi a-en" inputmode="decimal"></label>
+            </div>
+            <div class="bant-cift">
+              <button type="button" class="kenar" data-kenar="en-sol">En sol</button>
+              <button type="button" class="kenar" data-kenar="en-sag">En sağ</button>
+            </div>
+          </div>
+          <div class="adet-yan">
+            <label>Adet <input class="sayi a-adet" inputmode="numeric" value="1"></label>
+            <label>Bant <span data-birim-etiket>mm</span> <input class="sayi a-bant-mm" inputmode="decimal" placeholder="—"></label>
+            <button type="button" class="anahtar" data-parca-damar aria-pressed="false">
+              <span>Su yönü</span>
+              <span class="anahtar-kutu" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+        <p class="satir-not ayar-uyari" hidden></p>
+        <div class="cift-ok">
+          <button class="tam soluk btn-ayar-iptal" type="button">İptal</button>
+          <button class="tam btn-ayar-ok" type="button">Kayıt</button>
+        </div>
+      </div>
+    </div>
+    <div class="perde" id="ayar-perde-plaka">
+      <div class="ayar-kutu">
+        <h2 class="ayar-baslik">Parça ekle</h2>
+        <p class="sira-yaz">No: <span class="ayar-sira">1</span></p>
+        <div class="pano-ust">
+          <div class="pano-sol">
+            <div class="olcu-blok">
+              <label>Boy <span data-birim-etiket>mm</span> <input class="sayi a-boy" inputmode="decimal"></label>
+            </div>
+            <div class="bant-cift">
+              <button type="button" class="kenar" data-kenar="boy-sol">Boy sol</button>
+              <button type="button" class="kenar" data-kenar="boy-sag">Boy sağ</button>
+            </div>
+            <div class="olcu-blok">
+              <label>En <span data-birim-etiket>mm</span> <input class="sayi a-en" inputmode="decimal"></label>
+            </div>
+            <div class="bant-cift">
+              <button type="button" class="kenar" data-kenar="en-sol">En sol</button>
+              <button type="button" class="kenar" data-kenar="en-sag">En sağ</button>
+            </div>
+          </div>
+          <div class="adet-yan">
+            <label>Adet <input class="sayi a-adet" inputmode="numeric" value="1"></label>
+            <label>Bant <span data-birim-etiket>mm</span> <input class="sayi a-bant-mm" inputmode="decimal" placeholder="—"></label>
+            <button type="button" class="anahtar" data-parca-damar aria-pressed="false">
+              <span>Su yönü</span>
+              <span class="anahtar-kutu" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+        <p class="satir-not ayar-uyari" hidden></p>
+        <div class="cift-ok">
+          <button class="tam soluk btn-ayar-iptal" type="button">İptal</button>
+          <button class="tam btn-ayar-ok" type="button">Kayıt</button>
+        </div>
+      </div>
+    </div>
+    <div class="perde" id="atolye-perde">
+      <div class="ayar-kutu" data-ayar-sayfa="menu">
+        <h2>Atölye ayarları</h2>
+        <p class="sira-yaz">Kayıtlı kalır. Fire ve Plaka aynı.</p>
+        <div class="ayar-menu">
+          <button type="button" class="tam ayar-menu-satir" data-ayar-git="fiyat">m² fiyat</button>
+          <button type="button" class="tam soluk ayar-menu-satir" data-ayar-git="birim">Ölçü birimi</button>
+          <button type="button" class="tam ayar-menu-satir ayar-menu-bildir" data-ayar-git="bildir">Öneri / Şikayet</button>
+        </div>
+        <button class="tam soluk" type="button" data-ayar-kapat>Kapat</button>
+      </div>
+      <div class="ayar-kutu" data-ayar-sayfa="fiyat" hidden>
+        <div class="ayar-sayfa-ust">
+          <button class="geri" type="button" data-ayar-git="menu" aria-label="Atölye ayarları" title="Atölye ayarları">←</button>
+          <h2>m² fiyat</h2>
+        </div>
+        <p class="sira-yaz">Kalınlığa göre. Zam gelince buradan.</p>
+        <div id="fiyat-liste"></div>
+        <div class="form-satir fiyat-form">
+          <label class="olcu-satir">
+            <span class="olcu-ad">Ürün</span>
+            <input class="sayi" id="fiyat-urun" type="text" maxlength="40" placeholder="Örn. MDF">
+          </label>
+          <label class="olcu-satir">
+            <span class="olcu-ad">Kalınlık</span>
+            <input class="sayi" id="fiyat-kal" inputmode="numeric" placeholder="18">
+            <span class="olcu-birim">mm</span>
+          </label>
+          <label class="olcu-satir">
+            <span class="olcu-ad">Fiyat m²</span>
+            <input class="sayi" id="fiyat-tl" inputmode="decimal" placeholder="—">
+            <span class="olcu-birim">₺</span>
+          </label>
+        </div>
+        <button class="tam" type="button" id="btn-fiyat-kaydet">Fiyatı kaydet</button>
+      </div>
+      <div class="ayar-kutu" data-ayar-sayfa="birim" hidden>
+        <div class="ayar-sayfa-ust">
+          <button class="geri" type="button" data-ayar-git="menu" aria-label="Atölye ayarları" title="Atölye ayarları">←</button>
+          <h2>Ölçü birimi</h2>
+        </div>
+        <p class="sira-yaz">Seçim kayıtlı kalır; tüm giriş ve gösterim bu birimdedir.</p>
+        <div class="birim-kart">
+          <button type="button" class="birim-sec" data-birim-sec="mm">
+            <span class="birim-ikon">mm</span>
+            <span class="birim-ad">Milimetre</span>
+          </button>
+          <button type="button" class="birim-sec" data-birim-sec="cm">
+            <span class="birim-ikon">cm</span>
+            <span class="birim-ad">Santimetre</span>
+          </button>
+        </div>
+      </div>
+      <div class="ayar-kutu bildir-kutu" data-ayar-sayfa="bildir" hidden>
+        <div class="ayar-sayfa-ust">
+          <button class="geri" type="button" data-ayar-git="menu" aria-label="Atölye ayarları" title="Atölye ayarları">←</button>
+          <h2>Öneri / Şikayet</h2>
+        </div>
+        <p class="sira-yaz">Konuş, yazı kutuya düşer. Yanlışsa düzelt, gönder.</p>
+        <textarea id="bildir-metin" rows="3" maxlength="600" placeholder="Ne takıldı, ne kolaylaşır?"></textarea>
+        <p class="bildir-uyari" id="bildir-uyari" hidden></p>
+        <div class="bildir-ses">
+          <button type="button" class="bildir-mic" id="btn-bildir-mic" aria-pressed="false">Konuş</button>
+          <div class="bildir-ses-yan">
+            <span id="bildir-sure">0:00</span>
+            <span class="bildir-durum" id="bildir-durum">Yaz veya konuş</span>
+          </div>
+        </div>
+        <button class="tam" type="button" id="btn-bildir-gonder">Gönder</button>
+      </div>
+    </div>
+    <div class="perde" id="havuz-sil-perde">
+      <div class="ayar-kutu">
+        <h2>Satırı sil</h2>
+        <p class="sira-yaz" id="havuz-sil-yazi">Bu satır listeden çıksın mı?</p>
+        <div class="cift-ok">
+          <button class="tam soluk" type="button" id="btn-havuz-sil-iptal">İptal</button>
+          <button class="tam tehlike" type="button" id="btn-havuz-sil-ok">Sil</button>
+        </div>
+      </div>
+    </div>
+    <div class="perde" id="is-bilgi-perde">
+      <div class="ayar-kutu is-bilgi-kutu">
+        <h2>İş bilgisi</h2>
+        <p class="sira-yaz">MDF ve bant kalınlığı zorunlu.</p>
+        <label>MDF kalınlık (mm)
+          <input class="sayi" id="is-mdf" inputmode="decimal">
+        </label>
+        <label>Bant kalınlık (mm)
+          <input class="sayi" id="is-bant" inputmode="decimal">
+        </label>
+        <p class="satir-not" id="is-bilgi-uyari" hidden>İkisini de yaz.</p>
+        <div class="cift-ok">
+          <button class="tam soluk" type="button" id="btn-is-bilgi-iptal">İptal</button>
+          <button class="tam" type="button" id="btn-is-bilgi-ok">Kayıt</button>
+        </div>
+      </div>
+    </div>
+    <div class="perde" id="havuz-perde">
+      <div class="ayar-kutu">
+        <h2>Fire havuzu</h2>
+        <p class="sira-yaz">Kırpıntı ekle, kenara al, geri koy.</p>
+        <div class="form-satir">
+          <label>Boy <span data-birim-etiket>mm</span> <input class="sayi" id="h-boy" inputmode="decimal"></label>
+          <label>En <span data-birim-etiket>mm</span> <input class="sayi" id="h-en" inputmode="decimal"></label>
+          <label>Adet <input class="sayi kisa" id="h-adet" inputmode="numeric" value="1"></label>
+        </div>
+        <button class="tam" type="button" id="btn-havuz-ekle">Havuza ekle</button>
+        <p class="satir-not" data-bos>Boş — henüz fire yok.</p>
+        <div class="kaydir">
+          <table>
+            <thead><tr>
+              <th>No</th>
+              <th>Boy <span data-birim-etiket>mm</span></th>
+              <th>En <span data-birim-etiket>mm</span></th>
+              <th>Adet</th>
+              <th>Kalınlık mm</th>
+              <th></th>
+            </tr></thead>
+            <tbody data-havuz data-kenara-col></tbody>
+          </table>
+        </div>
+        <h3 class="havuz-alt">Kenara alınanlar</h3>
+        <p class="satir-not" id="kenar-bos">Kenara alınan yok.</p>
+        <div class="kaydir">
+          <table id="kenar-tablo" hidden>
+            <thead><tr>
+              <th>No</th>
+              <th>Boy <span data-birim-etiket>mm</span></th>
+              <th>En <span data-birim-etiket>mm</span></th>
+              <th>Adet</th>
+              <th>Kalınlık mm</th>
+              <th></th>
+            </tr></thead>
+            <tbody id="kenar-govde"></tbody>
+          </table>
+        </div>
+        <button class="tam soluk" type="button" id="btn-havuz-kapat">Kapat</button>
+      </div>
+    </div>
+    <div class="perde" id="levha-perde-fire">
+      <div class="ayar-kutu">
+        <h2 class="levha-baslik">Fire — levha ayarı</h2>
+        <p class="sira-yaz levha-sira">Bu işteki ebatlar. Fabrika listesi yok.</p>
+        <p class="satir-not levha-kayitli" hidden></p>
+        <label class="preset-sec"><span class="levha-liste-etiket">Bu işteki ebatlar</span>
+          <select class="levha-preset"></select>
+        </label>
+        <button class="tam soluk btn-ozel-olcu" type="button">Özel ölçü gir</button>
+        <div class="levha-ozel" hidden>
+          <div class="levha-alan">
+            <label>En <span data-birim-etiket>mm</span> <input class="sayi l-en" inputmode="decimal"></label>
+            <label>Boy <span data-birim-etiket>mm</span> <input class="sayi l-boy" inputmode="decimal"></label>
+            <label>Kalınlık (mm) <input class="sayi l-kalinlik" inputmode="numeric" placeholder="18"></label>
+          </div>
+        </div>
+        <button class="anahtar l-damar" type="button" aria-pressed="false">
+          <span>Su yönünü koru — döndürme yok</span>
+          <span class="anahtar-kutu" aria-hidden="true"></span>
+        </button>
+        <p class="satir-not levha-uyari" hidden></p>
+        <div class="cift-ok">
+          <button class="tam soluk btn-levha-iptal" type="button">İptal</button>
+          <button class="tam btn-levha-ok" type="button">Kayıt</button>
+        </div>
+      </div>
+    </div>
+    <div class="perde" id="levha-perde-plaka">
+      <div class="ayar-kutu">
+        <h2 class="levha-baslik">Plaka — levha ayarı</h2>
+        <p class="sira-yaz levha-sira">Hazır şablon ve özel ölçü.</p>
+        <p class="satir-not levha-kayitli" hidden></p>
+        <label class="preset-sec"><span class="levha-liste-etiket">Hazır şablon</span>
+          <select class="levha-preset"></select>
+        </label>
+        <button class="tam soluk btn-ozel-olcu" type="button">Özel ölçü gir</button>
+        <div class="levha-ozel" hidden>
+          <div class="levha-alan">
+            <label>En <span data-birim-etiket>mm</span> <input class="sayi l-en" inputmode="decimal"></label>
+            <label>Boy <span data-birim-etiket>mm</span> <input class="sayi l-boy" inputmode="decimal"></label>
+            <label>Kalınlık (mm) <input class="sayi l-kalinlik" inputmode="numeric" placeholder="18"></label>
+          </div>
+        </div>
+        <button class="anahtar l-damar" type="button" aria-pressed="false">
+          <span>Su yönünü koru — döndürme yok</span>
+          <span class="anahtar-kutu" aria-hidden="true"></span>
+        </button>
+        <p class="satir-not levha-uyari" hidden></p>
+        <div class="cift-ok">
+          <button class="tam soluk btn-levha-iptal" type="button">İptal</button>
+          <button class="tam btn-levha-ok" type="button">Kayıt</button>
+        </div>
+      </div>
+    </div>
+    <div class="perde" id="tez-indir-perde">
+      <div class="ayar-kutu tez-indir-kutu" role="dialog" aria-labelledby="tez-indir-baslik" aria-modal="true">
+        <div class="tez-indir-adim" data-tez-indir-adim="soru">
+          <h2 id="tez-indir-baslik">İndirmek istiyor musunuz?</h2>
+          <div class="cift-ok">
+            <button class="tam soluk" type="button" id="btn-tez-indir-vazgec">Vazgeç</button>
+            <button class="tam ana" type="button" id="btn-tez-indir-evet">Evet</button>
+          </div>
+        </div>
+        <div class="tez-indir-adim" data-tez-indir-adim="kanal" hidden>
+          <h2>Nasıl indirelim?</h2>
+          <button class="tam tez-indir-buyuk" type="button" data-tez-indir-kanal="txt">Telefona indir</button>
+          <button class="tam tez-indir-buyuk btn-whatsapp" type="button" data-tez-indir-kanal="whatsapp">WhatsApp’tan gönder</button>
+        </div>
+      </div>
+    </div>
+    <div class="perde cikti-perde" id="cikti-perde">
+      <div class="cikti-kutu" role="dialog" aria-labelledby="cikti-baslik" aria-modal="true">
+        <div class="cikti-adim" data-cikti-adim="menu">
+          <h2 id="cikti-baslik">Çıktı / Paylaş</h2>
+          <div class="cikti-secim">
+            <button class="tam btn-whatsapp" type="button" data-cikti-kanal="whatsapp">WhatsApp’a gönder</button>
+            <button class="tam btn-indir" type="button" data-cikti-kanal="txt">Cihaza indir</button>
+          </div>
+        </div>
+        <div class="cikti-adim" data-cikti-adim="secim" hidden>
+          <h2 id="cikti-secim-baslik">Ne insin?</h2>
+          <p class="sira-yaz cikti-secim-not">İşaretle, tek paket iner.</p>
+          <div id="cikti-secim-liste" class="cikti-secim-liste"></div>
+          <button class="tam" type="button" id="btn-cikti-secim-ok">İndir</button>
+          <button class="tam soluk" type="button" id="btn-cikti-secim-geri">Geri</button>
+        </div>
+        <div class="cikti-adim" data-cikti-adim="form" hidden>
+          <div class="musteri-kart">
+            <p class="musteri-baslik">İş / müşteri</p>
+            <label>İş / müşteri (isteğe bağlı) <input class="sayi is-ad" type="text" maxlength="80" autocomplete="name"></label>
+            <label>Telefon (isteğe bağlı) <input class="sayi is-tel" type="tel" maxlength="20" autocomplete="tel"></label>
+            <label>Adres (isteğe bağlı) <input class="sayi is-adres" type="text" maxlength="160"></label>
+            <p class="satir-not musteri-uyari" hidden></p>
+            <p class="cikti-feragat">Kesim ölçüleri ve hesaplamalar rehber niteliğindedir; uygulama öncesi son teyit ustanın sorumluluğundadır.</p>
+          </div>
+          <button class="tam" type="button" id="btn-cikti-ok">Devam</button>
+        </div>
+      </div>
+    </div>
+    <div class="perde ocr-perde" id="ocr-perde">
+      <div class="ocr-kutu" role="dialog" aria-labelledby="ocr-baslik" aria-modal="true">
+        <h2 id="ocr-baslik">OCR ile Ekle</h2>
+        <p>Yakında</p>
+        <button class="tam" type="button" id="btn-ocr-kapat">Tamam</button>
+      </div>
+    </div>
+    <div class="perde kimlik-perde" id="kimlik-perde">
+      <div class="kimlik-kutu" role="dialog" aria-labelledby="kimlik-baslik" aria-modal="true">
+        <h2 id="kimlik-baslik">Kesim listesini kimin adına hazırlayalım?</h2>
+        <label>Atölye / Usta adı
+          <input class="sayi" id="m-ad" type="text" autocomplete="organization" maxlength="80" placeholder="Örn. Aytiş Atölye">
+        </label>
+        <label>Telefon numarası
+          <input class="sayi" id="m-telefon" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="05xx xxx xx xx">
+        </label>
+        <label class="kimlik-onay" for="m-yasal">
+          <input type="checkbox" id="m-yasal">
+          <span>Ölçü optimizasyonu ve kesim hesapları tavsiye niteliğindedir. Fire ve kesim hatalarından doğacak sorumluluğu kabul ediyorum.</span>
+        </label>
+        <button class="tam" type="button" id="btn-kimlik-ok">Devam</button>
+      </div>
+    </div>
+    <footer>İki kapı: Fire Ebatlama / Plaka Ebatlama.</footer>
+    <div class="tez-mercek-cam" hidden>
+      <div class="tez-mercek-ic"></div>
+    </div>
+  </div>
+  <script src="cep_motor.js?v=plaka-oto"></script>
+  <script src="vitrin.js?v=bildir-mic" defer></script>
+</body>
+</html>

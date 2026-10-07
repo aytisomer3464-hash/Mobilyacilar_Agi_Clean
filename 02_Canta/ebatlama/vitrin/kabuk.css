@@ -1,0 +1,220 @@
+:root {
+  color-scheme: dark;
+  --bg: #2c3136;
+  --card: #1a1e22;
+  --kart: #1a1e22;
+  --wood: #e8e4dc;
+  --text: #e8e4dc;
+  --yazi: #e8e4dc;
+  --muted: #c4c0b8;
+  --soluk: #c4c0b8;
+  --accent: #fb923c;
+  --vurgu: #fb923c;
+  --marka: #fb923c;
+  --cizgi: #3a4046;
+  --ok: #fb923c;
+  --ok-ink: #7c2d12;
+  --k0-screen: #1a1e22;
+  --k0-paper: #2c3136;
+  --k0-ink: #e8e4dc;
+  --k0-muted: #c4c0b8;
+  --k0-line: #3a4046;
+  --k0-plaka: #fb923c;
+}
+html, body {
+  background: #2c3136 !important;
+  color: #e8e4dc;
+}
+.phone,
+.telefon {
+  max-width: none !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-height: none !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: #2c3136 !important;
+}
+@media (min-width: 480px) {
+  .telefon {
+    height: 100dvh !important;
+    max-height: none !important;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+}
+header,
+.phone header,
+.phone:has(#k0.on) header {
+  background: #2c3136 !important;
+  border-bottom-color: #3a4046 !important;
+  color: #e8e4dc;
+}
+#baslik,
+.phone:has(#k0.on) #baslik,
+.ust h1 {
+  color: #e8e4dc !important;
+}
+.rehber { color: #c4c0b8 !important; }
+.adimlar li.aktif {
+  color: #fb923c !important;
+  border-bottom-color: #fb923c !important;
+}
+.portal-don,
+.tam,
+.tam.ana,
+#k0 .tam.ana,
+button.geri,
+.kenara-btn,
+.ok,
+.secim-sira button.secili,
+.ayar-menu-bildir {
+  background: #fb923c !important;
+  color: #7c2d12 !important;
+  border-color: #fb923c !important;
+  box-shadow: none !important;
+}
+.tam.soluk,
+#k0 .tam.soluk,
+.ana-ayar,
+#k0 .ana-ayar,
+.disli,
+.yeni-kagit,
+.perde-kapat,
+.birim-sec,
+.kenar,
+.btn-tez-once,
+.btn-tez-sonra {
+  background: #3a4046 !important;
+  color: #e8e4dc !important;
+  border-color: #3a4046 !important;
+}
+.kart,
+.kutu,
+.k3-panel,
+.cekmece,
+.musteri-kart,
+.cikti-kutu,
+.kimlik-kutu,
+.ocr-kutu,
+.ayar-kutu,
+.k3-sade.k3-perde-sigmayan .fire-sigmayan {
+  background: #1a1e22 !important;
+  color: #e8e4dc;
+  border-color: #3a4046 !important;
+  box-shadow: none !important;
+}
+input.sayi,
+.kimlik-kutu .sayi,
+.bildir-kutu textarea,
+.preset-sec select,
+.olcu-satir,
+#k1-fire-ekle .form-satir label.olcu-satir,
+#k1-plaka-ekle label.olcu-satir,
+[data-ayar-sayfa="fiyat"] .olcu-satir,
+button.anahtar,
+.havuz-ikon {
+  background: #2c3136 !important;
+  color: #e8e4dc !important;
+  border-color: #3a4046 !important;
+}
+.k2 .liste-govde thead th,
+.k2 .liste-govde thead th.sira-bas,
+td.sira-hucre {
+  background: #1a1e22 !important;
+  color: #c4c0b8 !important;
+  border-color: #3a4046 !important;
+}
+.gosterge-ic {
+  background: #1a1e22;
+  border-color: #3a4046;
+  box-shadow: none;
+}
+.g-etiket { color: #c4c0b8; }
+.g-deger {
+  color: #fb923c;
+  text-shadow: none;
+}
+.g-satir { border-bottom-color: #3a4046; }
+#k0 h1 { color: #e8e4dc !important; }
+.phone:has(#k0.on),
+body:has(#k0.on) { background: #2c3136 !important; }
+footer { color: #c4c0b8 !important; }
+.yukle-baslik { color: #e8e4dc; }
+.yukle.buyuk { border-color: #3a4046; }
+.yukle.buyuk.dolu { border-color: #fb923c; }
+.ayar-btn,
+#jsonBtn,
+#indirBtn,
+.secim-sira button {
+  background: #3a4046 !important;
+  color: #e8e4dc !important;
+}
+#fotoBtn[aria-pressed="true"] {
+  background: #fb923c !important;
+  color: #7c2d12 !important;
+}
+#whatsappBtn,
+.cikti-secim .btn-whatsapp,
+.tez-indir-buyuk.btn-whatsapp {
+  background: #25d366 !important;
+  color: #052e16 !important;
+}
+.rozet.yerel,
+.rozet.gemini,
+.rozet.havuz,
+#supheOnay {
+  filter: none;
+}
+#supheOnay {
+  background: #fb923c !important;
+  color: #7c2d12 !important;
+}
+.birim-sec.sec {
+  border-color: #fb923c !important;
+  background: #3a4046 !important;
+}
+.kenar.yan {
+  background: #fb923c !important;
+  color: #7c2d12 !important;
+}
+.k3-sade .btn-senaryo {
+  background: #fb923c !important;
+  color: #7c2d12 !important;
+}
+.k3-sade .btn-senaryo-once,
+.k3-sade .btn-k3-perde {
+  background: #3a4046 !important;
+  color: #e8e4dc !important;
+  border-color: #3a4046 !important;
+}
+.tez-zoom-baslik {
+  background: #1a1e22 !important;
+  color: #e8e4dc !important;
+}
+button.anahtar[aria-pressed="true"] .anahtar-kutu {
+  background: #fb923c;
+}
+.havuz-ikon.dolu {
+  background: #fb923c !important;
+  color: #7c2d12 !important;
+}
+.havuz-ikon.dolu .rozet {
+  background: #7c2d12;
+  color: #fb923c;
+}
+.rozet { background: #fb923c; color: #7c2d12; }
+#k1-fire-ekle .ayar-hucre .disli { color: #fb923c; }
+.k2 .ayar-hucre .sil-ikon { color: #fb923c; }
+.bant-ozet { color: #fb923c; }
+.liste-hata,
+.ayar-uyari,
+.olcu-uyari,
+.ayar-kutu .sira-yaz { color: #fb923c !important; }
+th { color: #c4c0b8; }
+.ocr-kutu p { color: #e8e4dc !important; }
+.yukle-alt { color: #c4c0b8; }

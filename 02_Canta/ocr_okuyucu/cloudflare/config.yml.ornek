@@ -1,0 +1,11 @@
+# Named tunnel örneği. Kopyalayıp config.yml yapın; gerçek kimlik dosyasını git'e koymayın.
+# cloudflared tunnel create kesim-ocr
+# cloudflared tunnel route dns kesim-ocr atolye.sizin-alaniniz.com
+
+tunnel: TUNNEL_ID_BURAYA
+credentials-file: C:\Users\KULLANICI\.cloudflared\TUNNEL_ID_BURAYA.json
+
+ingress:
+  - hostname: atolye.sizin-alaniniz.com
+    service: http://127.0.0.1:8765
+  - service: http_status:404

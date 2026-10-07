@@ -1,0 +1,24 @@
+---
+description: OCR atölye denetimi — yalnız okuyucu dosyalarında
+globs: "**/ocr_okuyucu/**"
+alwaysApply: false
+---
+
+# Sürekli denetim (her komuttan önce)
+
+Kod yazmadan önce bu kıyası zihinde bitir; yanıtta kısa raporla (ilerleme / saha / eksik-fazla). Korunacak akış: otomatik tarama → dişli yükleme → kağıt üstü koyu sarı nefes çerçeve + opsiyonel mercek zoom → Geri·Onayla·Düzelt → özel bant hafızası → Model filtresi (Gövde/Kapak/Arkalık/Klapa) → WhatsApp/İndir.
+
+## Mimari (regresyon yok)
+
+- RapidOCR, Gemini yedek, kota, kara kutu (`hata_kayit` → `veri/hatalar/hata_kayitlari.log`) ve FastAPI `/api/tara` `/api/onizle` try/except bozulmaz.
+- `sunucu.py` / `masaustu.py` bu klasörde kalır; kök veya `01_` yok. iframe yok.
+- 401 kara kutuya yazılmaz. Çift tarama kilidi (imza + AbortController) kalkmaz.
+
+## Saha (usta, tek el, parlak ışık)
+
+- Büyük dokunma, az adım, mercek tıklaması dosya seçimini açmaz.
+- Filtre/WhatsApp tam listeyi bozmaz (filtre yalnızca ekran; gönderim tüm dolap).
+
+## Yapma
+
+- Exploit/PoC yok. Kara kutuyu sessizleştirme. İkinci RapidOCR veya Gemini’yi “hız için” atlama.

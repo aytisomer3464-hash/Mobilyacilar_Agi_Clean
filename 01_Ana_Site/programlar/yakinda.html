@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Yakında</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font: 16px/1.5 Roboto, "Segoe UI", system-ui, sans-serif;
+      background: #1a1e22;
+      color: #e8e4dc;
+    }
+    .sahne {
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .kutu {
+      width: min(100%, 420px);
+      padding: 36px 28px;
+      border-radius: 24px;
+      background: #2c3136;
+      border: 1px solid #3a4046;
+      text-align: center;
+      box-shadow: none;
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: #e8e4dc;
+    }
+    p {
+      margin: 0 0 24px;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #c4c0b8;
+    }
+    button {
+      min-height: 48px;
+      padding: 0 24px;
+      border: 1px solid #fb923c;
+      border-radius: 999px;
+      background: #fb923c;
+      color: #7c2d12;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    button:hover { background: #fb923c; }
+  </style>
+</head>
+<body>
+  <div class="sahne">
+    <div class="kutu">
+      <h1 id="baslik">Program</h1>
+      <p>Yakında</p>
+      <button type="button" id="kapat">Tamam</button>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var ad = new URLSearchParams(location.search).get("ad") || "Program";
+      document.getElementById("baslik").textContent = ad;
+      document.title = ad + " · Yakında";
+      document.getElementById("kapat").addEventListener("click", function () {
+        window.location.href = "../index.html";
+      });
+    })();
+  </script>
+</body>
+</html>
