@@ -123,6 +123,15 @@ Ray ve kulp iş ayarında yok. Seçilmeden çekmece ve kulp kodu yazılmaz.
 
 Katalog `katalog_arsiv.json`. Sıra yalnız `sablon` içindeki standart genişliği okur. `acik_ek` sıraya girmez. `modul_genislik` sırada kullanılmaz.
 
+`kapak_adedi` (planlı kural, karar 2026-10-08). **Henüz uygulanmadı:** kod bu alanı okumaz, katalogda alan yok, sıra her kasaya tek kapak koyar.
+
+- Şablon kaydında isteğe bağlıdır. Değer yalnız 1 veya 2 tam sayıdır.
+- Alan yoksa 1. Bugünkü tek kapak davranışı korunur.
+- Geçersiz değer (0, 3, ondalık, yazı, doğru/yanlış) hata verir; parça üretilmez.
+- Aynı tip ve aynı genişlikte iki kayıt farklı adet söylerse hata.
+- Kanat ölçüsü `kapak_hesapla(..., 2)` içindedir; yeni formül yazılmaz.
+- Klapa ve çekmece önü bu kuralın dışındadır.
+
 ## Standart ve köşe
 
 Standart kasa: şablonda `duz_kasa` yok veya doğru. Sıra soldan, duvara sığan en geniş standartı koyar. Kalan yine standartsa onu koyar. Değilse sağda dolgu.
@@ -140,7 +149,7 @@ Bunlar cümle olmadan kod yazılmaz:
 - Tip mm ayarda. Tur baza, duvar, boy seçer.
 - Raf ve çekmece: raf bağlandı. Çekmece yüksekliği yok.
 - Ayak ve süpürgelik parçası. Katman 2 yalnız yüksekliği yukarı kaydırır.
-- Klapa, kulp, çift kapak.
+- Klapa, kulp. Çift kapak kuralı Katalog bölümünde yazıldı; kod henüz yok.
 
 ## Şu an
 

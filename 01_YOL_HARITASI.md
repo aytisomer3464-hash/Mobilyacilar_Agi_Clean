@@ -112,7 +112,7 @@ Dosya bölme yok. Refactor yok. Yalnız mevcut fonksiyonun katmanı yazılır.
 
 **Test:** Aşama 1 testleri. Ayrıca `sira_kur` sonucu `modul_adedi > 0` iken kartın bu sayıyı yazdığı kontrol. Mevcut parça kutuları aynı kalır.
 
-**Geçiş:** Kart doğru adedi yazar ve mevcut motor testleri bozulmaz. Geçmeden çekmece açılmaz.
+**Geçiş:** Kart doğru adedi yazar ve mevcut motor testleri bozulmaz. Geçmeden çift kapak açılmaz. Çekmece çift kapaktan sonra gelir (karar 2026-10-08).
 
 ## AŞAMA 5 — Çekmece üretim katmanı
 
@@ -120,7 +120,7 @@ Dosya bölme yok. Refactor yok. Yalnız mevcut fonksiyonun katmanı yazılır.
 
 **eksik:** Çekmece yüksekliği kuralı. Ray seçim kuralı (dosyada yok). XYZ. `sira_kur` ve `vitrin.js` çağrısı. Menüde çekmece düğmesi.
 
-**Bağımlılık:** Aşama 4. `cekmece_derzi` ayarda durur, formülde bağlı değildir; bağlamak ayrı karar ister, bu sıranın 1. adımı değildir.
+**Bağımlılık:** Aşama 4 ve Aşama 6 çift kapak yerleşimi (karar 2026-10-08). `cekmece_derzi` ayarda durur, formülde bağlı değildir; bağlamak ayrı karar ister, bu sıranın 1. adımı değildir.
 
 Sıra, tek iş tek adım:
 
@@ -139,7 +139,7 @@ Sıra, tek iş tek adım:
 
 **Test:** Mevcut `test_cekmece_tandem`, `test_cekmece_bilyali`, `test_cekmece_gizli_ray_tandem_sayilir` bozulmaz. Yeni yükseklik, koordinat ve `sira_kur` çağrısı için yeni test. İkiz testi aynı sözlüğü ister.
 
-**Geçiş:** 1–8 biter ve eski çekmece testleri geçer. Geçmeden kapak aşaması açılmaz.
+**Geçiş:** 1–8 biter ve eski çekmece testleri geçer. Geçmeden klapa ve çekmece önü işi açılmaz. Çift kapak bu sınıra bağlı değildir (karar 2026-10-08).
 
 ## AŞAMA 6 — Kapak / çift kapak / klapa
 
@@ -149,12 +149,12 @@ Sıra, tek iş tek adım:
 
 **eksik:** Klapa fonksiyonu. **doküman/plan:** `MOBILYA_MOTORU_REHBER.md` “henüz kuralı yazılmayanlar” altında klapa. Menüde klapa düğmesi yok.
 
-**Bağımlılık:** Aşama 5. Kapak formülü (`iç ölçü + bindirme − derz`) korunur. Çekmece önü ile kapak aynı kapağı paylaşmaz; çekmece kutusu durmadan çift kapak yerleşimi ona bağlanmaz.
+**Bağımlılık:** Çift kapak: Aşama 4; çekmeceden önce gelir (karar 2026-10-08). Klapa ve çekmece önü bu kararın dışındadır; Aşama 5'e bağlı kalır. Kapak formülü (`iç ölçü + bindirme − derz`) korunur. Çekmece önü ile kapak aynı kapağı paylaşmaz; çift kapak çekmece kutusuna bağlanmaz.
 
 Ayrı işler, tek committe birleşmez:
 
 - Tek kapak: korunur. Yeniden yazılmaz.
-- Çift kapak: `kapak_hesapla(..., 2)` yerleşime bağlanır. Yeni ölçü formülü yazılmaz.
+- Çift kapak: `kapak_hesapla(..., 2)` yerleşime bağlanır. Yeni ölçü formülü yazılmaz. Kasa adedi katalogdaki isteğe bağlı `kapak_adedi` alanından gelir; kural rehberde, **doküman/plan**.
 - Klapa: kural cümlesi yokken kod yazılmaz. **eksik / doküman.**
 
 **Beklenen çıktı:** Çift kapak iki kutu olarak durur. Klapa, kural yazılmadan parça üretmez.
