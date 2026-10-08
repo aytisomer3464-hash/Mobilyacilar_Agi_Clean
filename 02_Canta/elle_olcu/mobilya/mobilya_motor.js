@@ -499,9 +499,8 @@
 
   function duvarDizi(cfg, duvarEn, tip, katalog) {
     var hatalar = [];
-    var ad = typeof tip === "string" ? String(tip).trim().toLowerCase() : "baza";
+    var ad = tip === undefined ? "baza" : (typeof tip === "string" ? String(tip).trim().toLowerCase() : "");
     var arsiv, enler, sec;
-    if (tip === undefined) ad = "baza";
     pozitif(duvarEn, "Duvar eni", hatalar);
     if (!TIPLER[ad]) hatalar.push("Tip baza, duvar veya boy olmalı.");
     if (hatalar.length) return hata(hatalar);

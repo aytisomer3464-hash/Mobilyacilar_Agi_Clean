@@ -99,6 +99,8 @@ def test_js_degistir_ayni(cfg):
         ("raf_yerlestir", raf_yerlestir, [600, 720, 580]),
         ("raf_yerlestir", raf_yerlestir, [600, 100, 580]),
         ("duvar_dizi", duvar_dizi, [100]),
+        ("duvar_dizi", duvar_dizi, [1900, " Duvar "]),
+        ("duvar_dizi", duvar_dizi, [1900, "BOY"]),
         ("sira_kur", sira_kur, [1900, 720, 580]),
         ("sira_kur", sira_kur, [1800, 720, 580]),
         ("sira_kur", sira_kur, [1900, 720, 580, "boy"]),
@@ -132,6 +134,10 @@ def test_js_ayarli_hesap_ayni(cfg):
 
 
 def test_js_hata_ayni(cfg):
+    for tip in (None, 1, True, ""):
+        py = duvar_dizi(cfg, 1900, tip)
+        assert py["hatalar"] == ["Tip baza, duvar veya boy olmalı."]
+        assert _js_hesap("duvar_dizi", cfg, [1900, tip]) == py
     assert _js_hesap("tip_olcu", cfg, ["baza", 800]) == tip_olcu(cfg, "baza", 800)
     assert _js_hesap("sira_kur", cfg, [100, 720, 580]) == sira_kur(cfg, 100, 720, 580)
     assert _js_hesap("govde_birlestir", cfg, [36, 720, 580]) == govde_birlestir(cfg, 36, 720, 580)
