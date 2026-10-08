@@ -314,6 +314,39 @@ def test_kapak_yerlestir_onde(cfg):
         "kalinlik": 716,
     }
     assert kapak_yerlestir(cfg, 36, 720, 580)["hazir"] is False
+    assert kapak_yerlestir(cfg, *DIS, kapak_adedi=1) == s
+
+
+def test_kapak_yerlestir_cift(cfg):
+    s = kapak_yerlestir(cfg, *DIS, kapak_adedi=2)
+    assert s["hazir"] is True
+    assert s["agirlik_kg"] == kapak_hesapla(cfg, *DIS, kapak_adedi=2)["agirlik_kg"]
+    sol, sag = s["parcalar"]
+    assert sol == {"ad": "kapak", "x": 2, "y": -18, "z": 2, "en": 297, "boy": 18, "kalinlik": 716}
+    assert sag == {"ad": "kapak", "x": 301, "y": -18, "z": 2, "en": 297, "boy": 18, "kalinlik": 716}
+    assert sag["x"] - (sol["x"] + sol["en"]) == cfg.derz
+    tek = kapak_yerlestir(cfg, *DIS)["parcalar"][0]
+    assert sol["x"] == tek["x"]
+    assert sag["x"] + sag["en"] == tek["x"] + tek["en"]
+    genis = kapak_yerlestir(cfg, 900, 720, 580, kapak_adedi=2)["parcalar"]
+    assert [(p["x"], p["en"]) for p in genis] == [(2, 447), (451, 447)]
+
+
+def test_kapak_yerlestir_cift_derz_ayardan(cfg):
+    sol, sag = kapak_yerlestir(cfg.degistir(derz=1.5), *DIS, kapak_adedi=2)["parcalar"]
+    assert sol["en"] == 297.75
+    assert sol["x"] == 1.5
+    assert sag["x"] == 300.75
+    assert sol["kalinlik"] == 717
+
+
+def test_kapak_yerlestir_adet_hatalari(cfg):
+    for adet in (0, 3, True, 1.5, "2", None):
+        s = kapak_yerlestir(cfg, *DIS, kapak_adedi=adet)
+        assert s["hazir"] is False
+        assert s["parcalar"] == []
+    assert kapak_yerlestir(cfg, *DIS, kapak_adedi=3)["hatalar"] == ["Kapak adedi 1 veya 2 olmalı."]
+    assert kapak_yerlestir(cfg, 36, 720, 580, kapak_adedi=2)["hazir"] is False
 
 
 # ---- Raf ----

@@ -364,19 +364,25 @@
     };
   }
 
-  function kapakYerlestir(cfg, disGenislik, disYukseklik, disDerinlik) {
-    var kapak = kapakHesapla(cfg, disGenislik, disYukseklik, disDerinlik, 1);
-    var p, x, z;
+  function kapakYerlestir(cfg, disGenislik, disYukseklik, disDerinlik, kapakAdedi) {
+    if (kapakAdedi === undefined) kapakAdedi = 1;
+    var kapak = kapakHesapla(cfg, disGenislik, disYukseklik, disDerinlik, kapakAdedi);
+    var p, toplam, x, z, parcalar, i;
     if (!kapak.hazir) return hata(kapak.hatalar);
     p = kapak.parcalar[0];
-    x = (disGenislik - p.genislik) / 2;
+    toplam = p.genislik * kapakAdedi + cfg.derz * (kapakAdedi - 1);
+    x = (disGenislik - toplam) / 2;
     z = (disYukseklik - p.yukseklik) / 2;
+    parcalar = [];
+    for (i = 0; i < kapakAdedi; i++) {
+      parcalar.push(kutu("kapak", x + i * (p.genislik + cfg.derz), -cfg.levha, z, p.genislik, cfg.levha, p.yukseklik));
+    }
     return {
       hazir: true,
       hatalar: [],
       ic: kapak.ic,
       agirlik_kg: kapak.agirlik_kg,
-      parcalar: [kutu("kapak", x, -cfg.levha, z, p.genislik, cfg.levha, p.yukseklik)]
+      parcalar: parcalar
     };
   }
 

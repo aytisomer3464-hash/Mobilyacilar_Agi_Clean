@@ -95,6 +95,9 @@ def test_js_degistir_ayni(cfg):
         ("kapak_hesapla", kapak_hesapla, [600, 720, 580]),
         ("kapak_hesapla", kapak_hesapla, [600, 720, 580, 2]),
         ("kapak_yerlestir", kapak_yerlestir, [600, 720, 580]),
+        ("kapak_yerlestir", kapak_yerlestir, [600, 720, 580, 1]),
+        ("kapak_yerlestir", kapak_yerlestir, [600, 720, 580, 2]),
+        ("kapak_yerlestir", kapak_yerlestir, [900, 720, 580, 2]),
         ("raf_hesapla", raf_hesapla, [600, 720, 580]),
         ("raf_yerlestir", raf_yerlestir, [600, 720, 580]),
         ("raf_yerlestir", raf_yerlestir, [600, 100, 580]),
@@ -126,6 +129,9 @@ def test_js_ayarli_hesap_ayni(cfg):
     assert _js_hesap("govde_birlestir", ayar, list(DIS)) == govde_birlestir(ayar, *DIS)
     assert _js_hesap("kapak_hesapla", ayar, list(DIS)) == kapak_hesapla(ayar, *DIS)
     assert _js_hesap("kapak_yerlestir", ayar, list(DIS)) == kapak_yerlestir(ayar, *DIS)
+    assert _js_hesap("kapak_yerlestir", ayar, [*DIS, 2]) == kapak_yerlestir(
+        ayar, *DIS, kapak_adedi=2
+    )
     assert _js_hesap("raf_hesapla", ayar, [*DIS, 2]) == raf_hesapla(ayar, *DIS, raf_adedi=2)
     assert _js_hesap("raf_yerlestir", ayar, list(DIS)) == raf_yerlestir(ayar, *DIS)
     assert _js_hesap("hirdavat_hesapla", ayar.degistir(mentese_esik_1=700), list(DIS)) == (
@@ -138,6 +144,10 @@ def test_js_hata_ayni(cfg):
         py = duvar_dizi(cfg, 1900, tip)
         assert py["hatalar"] == ["Tip baza, duvar veya boy olmalı."]
         assert _js_hesap("duvar_dizi", cfg, [1900, tip]) == py
+    for adet in (0, 3, True, 1.5, "2", None):
+        py = kapak_yerlestir(cfg, *DIS, kapak_adedi=adet)
+        assert py["hazir"] is False
+        assert _js_hesap("kapak_yerlestir", cfg, [*DIS, adet]) == py
     assert _js_hesap("tip_olcu", cfg, ["baza", 800]) == tip_olcu(cfg, "baza", 800)
     assert _js_hesap("sira_kur", cfg, [100, 720, 580]) == sira_kur(cfg, 100, 720, 580)
     assert _js_hesap("govde_birlestir", cfg, [36, 720, 580]) == govde_birlestir(cfg, 36, 720, 580)

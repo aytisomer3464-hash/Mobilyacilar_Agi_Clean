@@ -489,13 +489,15 @@ def kapak_yerlestir(
     dis_genislik: float,
     dis_yukseklik: float,
     dis_derinlik: float,
+    kapak_adedi: int = 1,
 ) -> dict:
-    """Tek kapak, tam bindirme, gövdenin önünde. Kalınlık levha."""
-    kapak = kapak_hesapla(cfg, dis_genislik, dis_yukseklik, dis_derinlik, 1)
+    """Tek veya çift kanat, tam bindirme, gövdenin önünde. Kalınlık levha. Kanatlar arası derz."""
+    kapak = kapak_hesapla(cfg, dis_genislik, dis_yukseklik, dis_derinlik, kapak_adedi)
     if not kapak["hazir"]:
         return _hata(kapak["hatalar"])
     p = kapak["parcalar"][0]
-    x = (dis_genislik - p["genislik"]) / 2
+    toplam = p["genislik"] * kapak_adedi + cfg.derz * (kapak_adedi - 1)
+    x = (dis_genislik - toplam) / 2
     z = (dis_yukseklik - p["yukseklik"]) / 2
     return {
         "hazir": True,
@@ -503,7 +505,16 @@ def kapak_yerlestir(
         "ic": kapak["ic"],
         "agirlik_kg": kapak["agirlik_kg"],
         "parcalar": [
-            _kutu("kapak", x, -cfg.levha, z, p["genislik"], cfg.levha, p["yukseklik"])
+            _kutu(
+                "kapak",
+                x + i * (p["genislik"] + cfg.derz),
+                -cfg.levha,
+                z,
+                p["genislik"],
+                cfg.levha,
+                p["yukseklik"],
+            )
+            for i in range(kapak_adedi)
         ],
     }
 
