@@ -125,9 +125,9 @@ Katalog `katalog_arsiv.json`. Sıra yalnız `sablon` içindeki standart genişli
 
 `kapak_adedi` (planlı kural, karar 2026-10-08). **Henüz uygulanmadı:** kod bu alanı okumaz, katalogda alan yok, sıra her kasaya tek kapak koyar.
 
-- Şablon kaydında isteğe bağlıdır. Değer yalnız 1 veya 2 tam sayıdır.
+- Şablon kaydında isteğe bağlıdır. Değer yalnız 1 veya 2 tam sayıdır. `2.0` 2 sayılır; JSON bu ikisini JS'de ayırmaz.
 - Alan yoksa 1. Bugünkü tek kapak davranışı korunur.
-- Geçersiz değer (0, 3, ondalık, yazı, doğru/yanlış) hata verir; parça üretilmez.
+- Geçersiz değer (0, 3, 1.5 gibi kesirli, yazı, doğru/yanlış, boş) hata verir; parça üretilmez.
 - Aynı tip ve aynı genişlikte iki kayıt farklı adet söylerse hata.
 - Kanat ölçüsü `kapak_hesapla(..., 2)` içindedir; yeni formül yazılmaz.
 - Klapa ve çekmece önü bu kuralın dışındadır.

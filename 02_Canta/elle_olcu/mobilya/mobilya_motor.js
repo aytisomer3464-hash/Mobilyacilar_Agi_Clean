@@ -15,7 +15,11 @@
     "raf_aks_baslangic", "raf_pimi_adet",
     "modul_genislik", "modul_derinlik", "panel_yogunluk", "metre_mm",
     "baza_govde_yukseklik", "tezgah_kalinlik", "duvar_govde_yukseklik",
-    "tezgah_ustu_bosluk", "boy_govde_yukseklik"
+    "tezgah_ustu_bosluk", "boy_govde_yukseklik",
+    "govde_vida_cap", "govde_vida_boy",
+    "govde_vida_esik_1", "govde_vida_esik_2", "govde_vida_esik_3",
+    "govde_vida_adet_1", "govde_vida_adet_2", "govde_vida_adet_3",
+    "duvar_montaj_vida_cap", "duvar_montaj_vida_boy"
   ];
   var POZITIF = {
     levha: 1, raf_aralik: 1, raf_aks: 1,
@@ -25,7 +29,11 @@
     konfirmat_cap: 1, konfirmat_boy: 1, konfirmat_birlesim: 1,
     modul_genislik: 1, modul_derinlik: 1, panel_yogunluk: 1, metre_mm: 1,
     baza_govde_yukseklik: 1, tezgah_kalinlik: 1, duvar_govde_yukseklik: 1,
-    tezgah_ustu_bosluk: 1, boy_govde_yukseklik: 1
+    tezgah_ustu_bosluk: 1, boy_govde_yukseklik: 1,
+    govde_vida_cap: 1, govde_vida_boy: 1,
+    govde_vida_esik_1: 1, govde_vida_esik_2: 1, govde_vida_esik_3: 1,
+    govde_vida_adet_1: 1, govde_vida_adet_2: 1, govde_vida_adet_3: 1,
+    duvar_montaj_vida_cap: 1, duvar_montaj_vida_boy: 1
   };
   var RAY_TIPLERI = { tandem: "tandem", gizli: "tandem", bilyali: "bilyali" };
   var ARKALIK_TIPLERI = { kanalli: "kanalli", bindirme: "bindirme" };
@@ -245,6 +253,37 @@
     if (kapakYukseklik <= esikler[1]) return { adet: adetler[1], hata: null };
     if (kapakYukseklik <= esikler[2]) return { adet: adetler[2], hata: null };
     return { adet: adetler[3], hata: null };
+  }
+
+  function govdeVidaBirlesim(cfg, derinlik) {
+    var esikler = [cfg.govde_vida_esik_1, cfg.govde_vida_esik_2, cfg.govde_vida_esik_3];
+    var adetler = [cfg.govde_vida_adet_1, cfg.govde_vida_adet_2, cfg.govde_vida_adet_3];
+    if (esikler[0] >= esikler[1] || esikler[1] >= esikler[2]) {
+      return { adet: null, hata: "Gövde vidası eşikleri artan olmalı." };
+    }
+    if (derinlik < esikler[0]) return { adet: adetler[0], hata: null };
+    if (derinlik <= esikler[1]) return { adet: adetler[1], hata: null };
+    if (derinlik <= esikler[2]) return { adet: adetler[2], hata: null };
+    return {
+      adet: null,
+      hata: "Birleşim derinliği " + temiz(esikler[2]) +
+        " mm üstünde: gövde vidası adedi için onaylı kural yok."
+    };
+  }
+
+  function govdeVidaToplam(cfg, disGenislik, disYukseklik, disDerinlik) {
+    var parcalar = govdeHesapla(cfg, disGenislik, disYukseklik, disDerinlik).parcalar;
+    var birlesim = 0;
+    var toplam = 0;
+    var i, p;
+    for (i = 0; i < parcalar.length; i++) {
+      p = parcalar[i];
+      if (p.ad === "alt" || p.ad === "ust") {
+        birlesim += p.adet * 2;
+        toplam += p.adet * 2 * govdeVidaBirlesim(cfg, p.derinlik).adet;
+      }
+    }
+    return { birlesim: birlesim, toplam: toplam };
   }
 
   function tipOlcu(cfg, tip, odaYukseklik) {
@@ -489,6 +528,30 @@
     return enler;
   }
 
+  function kapakAdetleri(katalog, tip) {
+    var adetler = {};
+    var hatalar = [];
+    var kayitlar = katalogKayitlari(katalog, tip);
+    var i, kayit, en, adet;
+    for (i = 0; i < kayitlar.length; i++) {
+      kayit = kayitlar[i];
+      if (!kayit || typeof kayit !== "object" || Array.isArray(kayit) || !sayiMi(kayit.en)) continue;
+      if (kayit.duz_kasa === false) continue;
+      en = temiz(kayit.en);
+      adet = Object.prototype.hasOwnProperty.call(kayit, "kapak_adedi") ? kayit.kapak_adedi : 1;
+      if (typeof adet !== "number" || (adet !== 1 && adet !== 2)) {
+        hatalar.push(en + " kasada kapak adedi 1 veya 2 olmalı.");
+        continue;
+      }
+      if (Object.prototype.hasOwnProperty.call(adetler, String(en)) && adetler[String(en)] !== adet) {
+        hatalar.push(en + " kasada kapak adedi çelişiyor.");
+        continue;
+      }
+      adetler[String(en)] = adet;
+    }
+    return { adetler: adetler, hatalar: hatalar };
+  }
+
   function enSec(enler, duvarEn) {
     var secim = [];
     var kalan = duvarEn;
@@ -529,11 +592,13 @@
     if (tip === undefined) tip = "baza";
     var dizi = duvarDizi(cfg, duvarEn, tip, katalog);
     var hatalar = [];
-    var parcalar, dx, i, j, w, gov, raf, kapak, p;
+    var parcalar, dx, i, j, w, gov, raf, kapak, p, adetler;
     if (!dizi.hazir) return hata(dizi.hatalar);
     pozitif(disYukseklik, "Dış yükseklik", hatalar);
     pozitif(disDerinlik, "Dış derinlik", hatalar);
     if (hatalar.length) return hata(hatalar);
+    adetler = kapakAdetleri(katalog || katalogYukle(), String(tip).trim().toLowerCase());
+    if (adetler.hatalar.length) return hata(adetler.hatalar);
     parcalar = [];
     dx = 0;
     for (i = 0; i < dizi.genislikler.length; i++) {
@@ -542,7 +607,7 @@
       if (!gov.hazir) return hata(gov.hatalar);
       raf = rafYerlestir(cfg, w, disYukseklik, disDerinlik);
       if (!raf.hazir) return hata(raf.hatalar);
-      kapak = kapakYerlestir(cfg, w, disYukseklik, disDerinlik);
+      kapak = kapakYerlestir(cfg, w, disYukseklik, disDerinlik, adetler.adetler[String(w)]);
       if (!kapak.hazir) return hata(kapak.hatalar);
       for (j = 0; j < gov.parcalar.length; j++) {
         p = gov.parcalar[j];
@@ -665,6 +730,9 @@
     var kapakYukseklik = kapak.parcalar[0].yukseklik;
     var mentese = menteseKapakBasi(cfg, kapakYukseklik);
     if (mentese.hata) return hata([mentese.hata]);
+    var vida = govdeVidaBirlesim(cfg, disDerinlik);
+    if (vida.hata) return hata([vida.hata]);
+    var vidaToplam = govdeVidaToplam(cfg, disGenislik, disYukseklik, disDerinlik);
     var menteseAdedi = mentese.adet * kapakAdedi;
     return {
       hazir: true,
@@ -683,12 +751,26 @@
         },
         { ad: "minifiks", birlesim_adet: temiz(cfg.minifiks_birlesim) },
         {
-          ad: "konfirmat",
-          cap: temiz(cfg.konfirmat_cap),
-          boy: temiz(cfg.konfirmat_boy),
-          birlesim_adet: temiz(cfg.konfirmat_birlesim)
+          ad: "govde_vidasi",
+          kullanim: "govde_imalat",
+          cap: temiz(cfg.govde_vida_cap),
+          boy: temiz(cfg.govde_vida_boy),
+          birlesim_derinligi: temiz(disDerinlik),
+          birlesim_adet: temiz(vida.adet),
+          birlesim_sayisi: vidaToplam.birlesim,
+          toplam_adet: temiz(vidaToplam.toplam)
         }
       ],
+      vida_turleri: {
+        govde_imalat: {
+          cap: temiz(cfg.govde_vida_cap),
+          boy: temiz(cfg.govde_vida_boy)
+        },
+        aski_duvar_montaj: {
+          cap: temiz(cfg.duvar_montaj_vida_cap),
+          boy: temiz(cfg.duvar_montaj_vida_boy)
+        }
+      },
       parcalar: []
     };
   }

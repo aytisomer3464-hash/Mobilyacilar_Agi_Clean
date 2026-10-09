@@ -123,6 +123,68 @@ def test_js_hesap_ayni(cfg, fn, py_fn, args):
     assert _js_hesap(fn, cfg, args) == py_fn(cfg, *args)
 
 
+CIFT = {"sablon": {"baza": [{"en": 900, "kapak_adedi": 2}, {"en": 600}]}}
+
+
+@pytest.mark.parametrize(
+    "args",
+    [
+        [1900, 720, 580, "baza", CIFT],
+        [1500, 720, 580, " Baza ", CIFT],
+        [1900, 720, 580, "baza", {"sablon": {"baza": [{"en": 900, "kapak_adedi": 1}]}}],
+        [1900, 720, 580, "baza", {"sablon": {"baza": [{"en": 900, "kapak_adedi": 2.0}]}}],
+        [1900, 720, 580, "baza", {"sablon": {"baza": [{"en": 900, "kapak_adedi": 1.0}]}}],
+        [900, 720, 580, "baza", {"sablon": {"baza": [{"en": 900, "kapak_adedi": 2}, {"en": 900, "kapak_adedi": 2.0}]}}],
+        [900, 720, 580, "baza", {"sablon": {"baza": [{"en": 900, "kapak_adedi": 2}] * 2}}],
+        [900, 720, 580, "baza", {"sablon": {"baza": [{"en": 900}, {"en": 1000, "duz_kasa": False, "kapak_adedi": 3}]}}],
+    ],
+)
+def test_js_sira_kur_kapak_adedi_ayni(cfg, args):
+    assert _js_hesap("sira_kur", cfg, args) == sira_kur(cfg, *args)
+    assert sira_kur(cfg, *args)["hazir"] is True
+
+
+@pytest.mark.parametrize(
+    "baza",
+    [
+        [{"en": 900, "kapak_adedi": 0}],
+        [{"en": 900, "kapak_adedi": 3}],
+        [{"en": 900, "kapak_adedi": True}],
+        [{"en": 900, "kapak_adedi": 1.5}],
+        [{"en": 900, "kapak_adedi": 2.5}],
+        [{"en": 900, "kapak_adedi": False}],
+        [{"en": 900, "kapak_adedi": "2"}],
+        [{"en": 900, "kapak_adedi": None}],
+        [{"en": 900, "kapak_adedi": 2}, {"en": 900}],
+        [{"en": 900}, {"en": 300, "kapak_adedi": 3}],
+    ],
+)
+def test_js_sira_kur_kapak_adedi_hata_ayni(cfg, baza):
+    args = [900, 720, 580, "baza", {"sablon": {"baza": baza}}]
+    py = sira_kur(cfg, *args)
+    assert py["hazir"] is False
+    assert _js_hesap("sira_kur", cfg, args) == py
+
+
+@pytest.mark.parametrize("derinlik", [249, 249.9, 250, 450, 450.5, 451, 700, 701])
+def test_js_govde_vidasi_sinir_ayni(cfg, derinlik):
+    args = [600, 720, derinlik]
+    assert _js_hesap("hirdavat_hesapla", cfg, args) == hirdavat_hesapla(cfg, *args)
+
+
+def test_js_govde_vidasi_ayarli_ayni(cfg):
+    ayar = cfg.degistir(
+        govde_vida_cap=5, govde_vida_esik_1=300, govde_vida_adet_3=6,
+        duvar_montaj_vida_cap=8, duvar_montaj_vida_boy=60,
+    )
+    for args in ([600, 720, 299], [600, 720, 580], [600, 720, 580, 2], [900, 2100, 320]):
+        assert _js_hesap("hirdavat_hesapla", ayar, args) == hirdavat_hesapla(ayar, *args)
+    bozuk = cfg.degistir(govde_vida_esik_1=500, govde_vida_esik_2=450)
+    py = hirdavat_hesapla(bozuk, *DIS)
+    assert py["hatalar"] == ["Gövde vidası eşikleri artan olmalı."]
+    assert _js_hesap("hirdavat_hesapla", bozuk, list(DIS)) == py
+
+
 def test_js_ayarli_hesap_ayni(cfg):
     ayar = cfg.degistir(levha=16, derz=1.5, raf_aks=50, raf_aks_baslangic=40, raf_pimi_adet=6)
     assert _js_hesap("govde_hesapla", ayar, list(DIS)) == govde_hesapla(ayar, *DIS)

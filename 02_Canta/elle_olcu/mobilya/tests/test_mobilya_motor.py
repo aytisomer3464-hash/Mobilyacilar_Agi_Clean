@@ -73,6 +73,20 @@ GOMULU_AYARLAR = {
     "tezgah_ustu_bosluk": 550,
     "boy_govde_yukseklik": 2100,
 }
+# docs/MOBILYA_URETIM_STANDARTLARI.md S-01/S-02 (GÖREV 022)
+STANDART_AYARLAR = {
+    "govde_vida_cap": 4,
+    "govde_vida_boy": 50,
+    "govde_vida_esik_1": 250,
+    "govde_vida_esik_2": 450,
+    "govde_vida_esik_3": 700,
+    "govde_vida_adet_1": 2,
+    "govde_vida_adet_2": 3,
+    "govde_vida_adet_3": 4,
+    # GÖREV 023: askı sistemi duvar montaj vidası
+    "duvar_montaj_vida_cap": 7,
+    "duvar_montaj_vida_boy": 50,
+}
 
 
 @pytest.fixture
@@ -87,7 +101,7 @@ def _parcalar(sonuc):
 # ---- MotorConfig ----
 
 def test_varsayilan_dosya_degerleri(cfg):
-    assert asdict(cfg) == {**DOSYA_DEGERLERI, **GOMULU_AYARLAR}
+    assert asdict(cfg) == {**DOSYA_DEGERLERI, **GOMULU_AYARLAR, **STANDART_AYARLAR}
 
 
 def test_config_eksik_ve_fazla_ayar(cfg):
@@ -480,6 +494,76 @@ def test_sira_kur_dolgu_sagda(cfg):
     assert dar["hatalar"] == ["Duvar modüle dar."]
 
 
+def _katalog(*kayitlar):
+    return {"sablon": {"baza": list(kayitlar)}}
+
+
+def _kapak_x(sonuc):
+    return [p["x"] for p in sonuc["parcalar"] if p["ad"] == "kapak"]
+
+
+def test_sira_kur_kapak_adedi_yoksa_tek(cfg):
+    gercek = sira_kur(cfg, 1900, 720, 580)
+    assert _kapak_x(gercek) == [2, 902]
+    bir = sira_kur(cfg, 1900, 720, 580, "baza", _katalog({"en": 900, "kapak_adedi": 1}))
+    yok = sira_kur(cfg, 1900, 720, 580, "baza", _katalog({"en": 900}))
+    assert bir == yok
+    assert bir["parcalar"] == gercek["parcalar"]
+
+
+def test_sira_kur_cift_kapak(cfg):
+    s = sira_kur(cfg, 1900, 720, 580, "baza", _katalog({"en": 900, "kapak_adedi": 2}))
+    assert s["hazir"] is True
+    assert s["genislikler"] == [900, 900]
+    assert _kapak_x(s) == [2, 451, 902, 1351]
+    assert {p["en"] for p in s["parcalar"] if p["ad"] == "kapak"} == {447}
+    karma = sira_kur(
+        cfg, 1500, 720, 580, " Baza ",
+        _katalog({"en": 900, "kapak_adedi": 2}, {"en": 600}),
+    )
+    assert karma["genislikler"] == [900, 600]
+    assert _kapak_x(karma) == [2, 451, 902]
+
+
+def test_sira_kur_kapak_adedi_tekrar_ayni(cfg):
+    kat = _katalog({"en": 900, "kapak_adedi": 2}, {"en": 900, "kapak_adedi": 2})
+    assert _kapak_x(sira_kur(cfg, 900, 720, 580, "baza", kat)) == [2, 451]
+    karma = _katalog({"en": 900, "kapak_adedi": 2}, {"en": 900, "kapak_adedi": 2.0})
+    assert _kapak_x(sira_kur(cfg, 900, 720, 580, "baza", karma)) == [2, 451]
+
+
+def test_sira_kur_kapak_adedi_tam_ondalik(cfg):
+    iki = sira_kur(cfg, 1900, 720, 580, "baza", _katalog({"en": 900, "kapak_adedi": 2}))
+    iki_nokta = sira_kur(cfg, 1900, 720, 580, "baza", _katalog({"en": 900, "kapak_adedi": 2.0}))
+    assert iki_nokta == iki
+    bir_nokta = sira_kur(cfg, 1900, 720, 580, "baza", _katalog({"en": 900, "kapak_adedi": 1.0}))
+    assert _kapak_x(bir_nokta) == [2, 902]
+
+
+def test_sira_kur_kapak_adedi_hatalari(cfg):
+    for adet in (0, 3, True, False, 1.5, 2.5, "2", None, float("nan")):
+        s = sira_kur(cfg, 900, 720, 580, "baza", _katalog({"en": 900, "kapak_adedi": adet}))
+        assert s["hazir"] is False
+        assert s["hatalar"] == ["900 kasada kapak adedi 1 veya 2 olmalı."]
+        assert s["parcalar"] == []
+    celiski = sira_kur(
+        cfg, 900, 720, 580, "baza",
+        _katalog({"en": 900, "kapak_adedi": 2}, {"en": 900}),
+    )
+    assert celiski["hatalar"] == ["900 kasada kapak adedi çelişiyor."]
+    assert celiski["parcalar"] == []
+    kullanilmayan = sira_kur(
+        cfg, 900, 720, 580, "baza",
+        _katalog({"en": 900}, {"en": 300, "kapak_adedi": 3}),
+    )
+    assert kullanilmayan["hatalar"] == ["300 kasada kapak adedi 1 veya 2 olmalı."]
+
+
+def test_sira_kur_kose_kapak_adedi_okunmaz(cfg):
+    kat = _katalog({"en": 900}, {"en": 1000, "duz_kasa": False, "kapak_adedi": 3})
+    assert sira_kur(cfg, 900, 720, 580, "baza", kat)["hazir"] is True
+
+
 # ---- Çekmece ----
 
 def test_cekmece_tandem(cfg):
@@ -657,7 +741,116 @@ def test_hirdavat_varsayilan(cfg):
     assert s["hirdavat"][0] == {"ad": "mentese", "adet": 2}
     assert s["hirdavat"][1] == {"ad": "kavela", "cap": 8, "boy": 30, "birlesim_adet": 2}
     assert s["hirdavat"][2] == {"ad": "minifiks", "birlesim_adet": 2}
-    assert s["hirdavat"][3] == {"ad": "konfirmat", "cap": 7, "boy": 50, "birlesim_adet": 2}
+    assert s["hirdavat"][3] == {
+        "ad": "govde_vidasi",
+        "kullanim": "govde_imalat",
+        "cap": 4,
+        "boy": 50,
+        "birlesim_derinligi": 580,
+        "birlesim_adet": 4,
+        "birlesim_sayisi": 4,
+        "toplam_adet": 16,
+    }
+    assert s["vida_turleri"] == {
+        "govde_imalat": {"cap": 4, "boy": 50},
+        "aski_duvar_montaj": {"cap": 7, "boy": 50},
+    }
+
+
+def test_hirdavat_geriye_donuk_uyum(cfg):
+    s = hirdavat_hesapla(cfg, *DIS)
+    assert set(s) == {
+        "hazir", "hatalar", "ic", "kapak_yuksekligi",
+        "mentese_kapak_basi", "mentese_adedi", "hirdavat", "vida_turleri", "parcalar",
+    }
+    assert [h["ad"] for h in s["hirdavat"]] == ["mentese", "kavela", "minifiks", "govde_vidasi"]
+    cift = hirdavat_hesapla(cfg, *DIS, kapak_adedi=2)
+    assert cift["hirdavat"][:3] == [
+        {"ad": "mentese", "adet": 4},
+        {"ad": "kavela", "cap": 8, "boy": 30, "birlesim_adet": 2},
+        {"ad": "minifiks", "birlesim_adet": 2},
+    ]
+
+
+def test_hirdavat_konfirmat_listede_yok(cfg):
+    s = hirdavat_hesapla(cfg, *DIS)
+    assert all(h["ad"] != "konfirmat" for h in s["hirdavat"])
+    assert all(not (h.get("cap") == 7 and h.get("boy") == 50) for h in s["hirdavat"])
+    eski = hirdavat_hesapla(cfg.degistir(konfirmat_cap=9, konfirmat_boy=70, konfirmat_birlesim=3), *DIS)
+    assert eski["hirdavat"] == s["hirdavat"]
+    assert eski["vida_turleri"] == s["vida_turleri"]
+
+
+@pytest.mark.parametrize(
+    "derinlik, adet",
+    [(100, 2), (249, 2), (249.9, 2), (250, 3), (450, 3), (450.5, 4), (451, 4), (580, 4), (700, 4)],
+)
+def test_hirdavat_govde_vidasi_sinirlar(cfg, derinlik, adet):
+    s = hirdavat_hesapla(cfg, 600, 720, derinlik)
+    assert s["hazir"] is True
+    assert s["hirdavat"][3]["birlesim_derinligi"] == derinlik
+    assert s["hirdavat"][3]["birlesim_adet"] == adet
+    assert s["hirdavat"][3]["birlesim_sayisi"] == 4
+    assert s["hirdavat"][3]["toplam_adet"] == 4 * adet
+
+
+def test_hirdavat_govde_vidasi_toplam(cfg):
+    """Yan–alt ve yan–üst: 4 birleşim. Genişlik, yükseklik, kapak adedi toplamı değiştirmez."""
+    assert hirdavat_hesapla(cfg, 300, 720, 320)["hirdavat"][3]["toplam_adet"] == 12
+    assert hirdavat_hesapla(cfg, 900, 2100, 580)["hirdavat"][3]["toplam_adet"] == 16
+    assert hirdavat_hesapla(cfg, *DIS, kapak_adedi=2)["hirdavat"][3]["toplam_adet"] == 16
+    parcalar = {p["ad"]: p for p in govde_hesapla(cfg, *DIS)["parcalar"]}
+    assert parcalar["alt"]["adet"] + parcalar["ust"]["adet"] == 2
+    assert parcalar["alt"]["derinlik"] == parcalar["ust"]["derinlik"] == DIS[2]
+
+
+@pytest.mark.parametrize("derinlik", [700.5, 701, 900])
+def test_hirdavat_govde_vidasi_700_ustu_kural_yok(cfg, derinlik):
+    s = hirdavat_hesapla(cfg, 600, 720, derinlik)
+    assert s["hazir"] is False
+    assert s["parcalar"] == []
+    assert s["hatalar"] == [
+        "Birleşim derinliği 700 mm üstünde: gövde vidası adedi için onaylı kural yok."
+    ]
+
+
+def test_hirdavat_govde_vidasi_ayardan_gelir(cfg):
+    ayar = cfg.degistir(
+        govde_vida_cap=5, govde_vida_boy=60, govde_vida_esik_1=300, govde_vida_adet_3=6
+    )
+    s = hirdavat_hesapla(ayar, 600, 720, 299)
+    assert s["hirdavat"][3] == {
+        "ad": "govde_vidasi", "kullanim": "govde_imalat",
+        "cap": 5, "boy": 60, "birlesim_derinligi": 299, "birlesim_adet": 2,
+        "birlesim_sayisi": 4, "toplam_adet": 8,
+    }
+    assert s["vida_turleri"]["govde_imalat"] == {"cap": 5, "boy": 60}
+    assert hirdavat_hesapla(ayar, *DIS)["hirdavat"][3]["birlesim_adet"] == 6
+    assert hirdavat_hesapla(ayar, *DIS)["hirdavat"][3]["toplam_adet"] == 24
+    s = hirdavat_hesapla(cfg.degistir(govde_vida_esik_3=1000), 600, 720, 900)
+    assert s["hirdavat"][3]["birlesim_adet"] == 4
+
+
+def test_hirdavat_duvar_montaj_vidasi(cfg):
+    s = hirdavat_hesapla(cfg.degistir(duvar_montaj_vida_cap=8, duvar_montaj_vida_boy=60), *DIS)
+    assert s["vida_turleri"]["aski_duvar_montaj"] == {"cap": 8, "boy": 60}
+    assert s["vida_turleri"]["govde_imalat"] == {"cap": 4, "boy": 50}
+    assert all(h.get("kullanim") != "aski_duvar_montaj" for h in s["hirdavat"])
+    with pytest.raises(ValueError, match="sıfırdan büyük"):
+        cfg.degistir(duvar_montaj_vida_boy=0)
+
+
+def test_hirdavat_govde_vidasi_esik_hatalari(cfg):
+    for ayar in (
+        cfg.degistir(govde_vida_esik_1=450),
+        cfg.degistir(govde_vida_esik_2=700),
+        cfg.degistir(govde_vida_esik_1=500, govde_vida_esik_2=450),
+    ):
+        s = hirdavat_hesapla(ayar, *DIS)
+        assert s["hazir"] is False
+        assert s["hatalar"] == ["Gövde vidası eşikleri artan olmalı."]
+    with pytest.raises(ValueError, match="sıfırdan büyük"):
+        cfg.degistir(govde_vida_adet_1=0)
 
 
 def test_hirdavat_cift_kapak(cfg):

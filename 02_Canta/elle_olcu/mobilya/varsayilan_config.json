@@ -40,5 +40,15 @@
   "tezgah_kalinlik": 40,
   "duvar_govde_yukseklik": 720,
   "tezgah_ustu_bosluk": 550,
-  "boy_govde_yukseklik": 2100
+  "boy_govde_yukseklik": 2100,
+  "govde_vida_cap": 4,
+  "govde_vida_boy": 50,
+  "govde_vida_esik_1": 250,
+  "govde_vida_esik_2": 450,
+  "govde_vida_esik_3": 700,
+  "govde_vida_adet_1": 2,
+  "govde_vida_adet_2": 3,
+  "govde_vida_adet_3": 4,
+  "duvar_montaj_vida_cap": 7,
+  "duvar_montaj_vida_boy": 50
 }

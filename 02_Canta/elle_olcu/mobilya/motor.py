@@ -22,7 +22,14 @@ Dosyadan ayrılan yerler:
   Bu eşik Blum adet şeması değildir. Kapak kg döner; menteşe adedi onu henüz kullanmaz.
 - Kapak ağırlığı: (en / metre_mm) × (boy / metre_mm) × (levha / metre_mm) × panel_yogunluk.
   Kalınlık levhadır. Yoğunluk kg/m³, ayardadır.
-- Kavela, minifiks, konfirmat yalnız birleşim başı ölçü/adettir. Birleşim sayısı yok; toplam yok.
+- Kavela, minifiks yalnız birleşim başı ölçü/adettir. Birleşim sayısı yok; toplam yok.
+- konfirmat_* ayarları eski ayar dosyaları bozulmasın diye durur; hırdavat listesine girmez
+  (7×50 gövde vidası değil, askı duvar montaj vidasıdır: duvar_montaj_vida_*).
+- Gövde vidası (standart S-01/S-02): birleşim derinliği alt/üst derinliği, yani dış derinliktir.
+  esik_1'den küçük adet_1; esik_2 dahil adet_2; esik_3 dahil adet_3. esik_3 üstü onaylı kural yok, hata.
+  Toplam yalnız yan–alt ve yan–üst bağlantılarıdır (4 birleşim). Dikme, raf, arkalık, montaj sayılmaz.
+- vida_turleri kullanım amacını ayırır: govde_imalat (gövde vidası), aski_duvar_montaj (askı sistemi
+  duvar montaj vidası). Montaj vidasında adet, dübel ve bağlantı kuralı yok; liste satırı üretilmez.
 - Raf delik aksı `37 + n·raf_aks`; 37 ayara taşındı. Dizi iç yükseklikte biter
   (dosyada bitiş yok). Raf pimi = raf_pimi_adet × raf_adedi. Delik yan adedi yok.
 
@@ -74,6 +81,16 @@ _POZITIF = frozenset(
         "duvar_govde_yukseklik",
         "tezgah_ustu_bosluk",
         "boy_govde_yukseklik",
+        "govde_vida_cap",
+        "govde_vida_boy",
+        "govde_vida_esik_1",
+        "govde_vida_esik_2",
+        "govde_vida_esik_3",
+        "govde_vida_adet_1",
+        "govde_vida_adet_2",
+        "govde_vida_adet_3",
+        "duvar_montaj_vida_cap",
+        "duvar_montaj_vida_boy",
     }
 )
 
@@ -147,6 +164,16 @@ class MotorConfig:
     duvar_govde_yukseklik: float
     tezgah_ustu_bosluk: float
     boy_govde_yukseklik: float
+    govde_vida_cap: float
+    govde_vida_boy: float
+    govde_vida_esik_1: float
+    govde_vida_esik_2: float
+    govde_vida_esik_3: float
+    govde_vida_adet_1: float
+    govde_vida_adet_2: float
+    govde_vida_adet_3: float
+    duvar_montaj_vida_cap: float
+    duvar_montaj_vida_boy: float
 
     @classmethod
     def from_dict(cls, veri: Any) -> MotorConfig:
@@ -313,6 +340,39 @@ def _mentese_kapak_basi(cfg: MotorConfig, kapak_yukseklik: float) -> tuple[float
     if kapak_yukseklik <= esikler[2]:
         return adetler[2], None
     return adetler[3], None
+
+
+def _govde_vida_birlesim(cfg: MotorConfig, derinlik: float) -> tuple[float | None, str | None]:
+    """İlk eşik hariç (<), sonrakiler dahil (<=). Son eşik üstü kural yok."""
+    esikler = (cfg.govde_vida_esik_1, cfg.govde_vida_esik_2, cfg.govde_vida_esik_3)
+    adetler = (cfg.govde_vida_adet_1, cfg.govde_vida_adet_2, cfg.govde_vida_adet_3)
+    if esikler[0] >= esikler[1] or esikler[1] >= esikler[2]:
+        return None, "Gövde vidası eşikleri artan olmalı."
+    if derinlik < esikler[0]:
+        return adetler[0], None
+    if derinlik <= esikler[1]:
+        return adetler[1], None
+    if derinlik <= esikler[2]:
+        return adetler[2], None
+    return None, f"Birleşim derinliği {_temiz(esikler[2])} mm üstünde: gövde vidası adedi için onaylı kural yok."
+
+
+def _govde_vida_toplam(
+    cfg: MotorConfig, dis_genislik: float, dis_yukseklik: float, dis_derinlik: float
+) -> tuple[int, float]:
+    """Alt ve üst iki yan arasına oturur: her biri 2 yan bağlantısı, derinliği kendi derinliği.
+
+    Dikme, sabit raf, arkalık ve montaj bağlantısı onaylı kural olmadığı için sayılmaz.
+    Çağıran derinliği önceden _govde_vida_birlesim ile doğrular.
+    """
+    birlesim = 0
+    toplam = 0
+    for p in govde_hesapla(cfg, dis_genislik, dis_yukseklik, dis_derinlik)["parcalar"]:
+        if p["ad"] in ("alt", "ust"):
+            adet, _ = _govde_vida_birlesim(cfg, p["derinlik"])
+            birlesim += p["adet"] * 2
+            toplam += p["adet"] * 2 * adet
+    return birlesim, toplam
 
 
 def tip_olcu(cfg: MotorConfig, tip: Any, oda_yukseklik: float) -> dict:
@@ -627,6 +687,31 @@ def kose_enler(katalog: dict, tip: str) -> list:
     return sorted(set(enler))
 
 
+def _kapak_adetleri(katalog: dict, tip: str) -> tuple[dict, list[str]]:
+    """Düz kasa genişliği → kapak adedi. Alan yoksa 1. Yalnız 1 veya 2; çelişki hatadır.
+
+    JSON 2.0 ile 2'yi JS'de ayırmaz; 2.0 burada da 2 sayılır.
+    """
+    adetler: dict = {}
+    hatalar: list[str] = []
+    for kayit in _katalog_kayitlari(katalog, tip):
+        if not isinstance(kayit, dict) or not _sayi_mi(kayit.get("en")):
+            continue
+        if kayit.get("duz_kasa", True) is False:
+            continue
+        en = _temiz(kayit["en"])
+        adet = kayit.get("kapak_adedi", 1)
+        if not _sayi_mi(adet) or adet not in (1, 2):
+            hatalar.append(f"{en} kasada kapak adedi 1 veya 2 olmalı.")
+            continue
+        adet = _temiz(adet)
+        if en in adetler and adetler[en] != adet:
+            hatalar.append(f"{en} kasada kapak adedi çelişiyor.")
+            continue
+        adetler[en] = adet
+    return adetler, hatalar
+
+
 def _en_sec(enler: list, duvar_en: float) -> tuple[list, float]:
     """Soldan, sığan en geniş standart. Kalan dolgudur."""
     secim: list = []
@@ -675,13 +760,20 @@ def sira_kur(
     tip: str = "baza",
     katalog: dict | None = None,
 ) -> dict:
-    """Standart kasaları soldan dizer. Köşe genişliği girmez. Dolgu sağda."""
+    """Standart kasaları soldan dizer. Köşe genişliği girmez. Dolgu sağda.
+
+    Kasanın kapak adedi katalogdaki isteğe bağlı kapak_adedi alanından gelir.
+    """
     dizi = duvar_dizi(cfg, duvar_en, tip, katalog)
     if not dizi["hazir"]:
         return _hata(dizi["hatalar"])
     hatalar: list[str] = []
     _pozitif(dis_yukseklik, "Dış yükseklik", hatalar)
     _pozitif(dis_derinlik, "Dış derinlik", hatalar)
+    if hatalar:
+        return _hata(hatalar)
+    arsiv = katalog if katalog is not None else katalog_yukle()
+    kapak_adetleri, hatalar = _kapak_adetleri(arsiv, tip.strip().lower())
     if hatalar:
         return _hata(hatalar)
     parcalar: list = []
@@ -693,7 +785,7 @@ def sira_kur(
         raf = raf_yerlestir(cfg, w, dis_yukseklik, dis_derinlik)
         if not raf["hazir"]:
             return _hata(raf["hatalar"])
-        kapak = kapak_yerlestir(cfg, w, dis_yukseklik, dis_derinlik)
+        kapak = kapak_yerlestir(cfg, w, dis_yukseklik, dis_derinlik, kapak_adetleri[w])
         if not kapak["hazir"]:
             return _hata(kapak["hatalar"])
         for p in gov["parcalar"] + raf["parcalar"] + kapak["parcalar"]:
@@ -859,7 +951,7 @@ def hirdavat_hesapla(
     dis_derinlik: float,
     kapak_adedi: int = 1,
 ) -> dict:
-    """Menteşe adedi kapak yüksekliğinden. Kavela/minifiks/konfirmat birleşim başı."""
+    """Menteşe adedi kapak yüksekliğinden. Kavela/minifiks/gövde vidası birleşim başı."""
     kapak = kapak_hesapla(cfg, dis_genislik, dis_yukseklik, dis_derinlik, kapak_adedi)
     if not kapak["hazir"]:
         return _hata(kapak["hatalar"])
@@ -867,6 +959,10 @@ def hirdavat_hesapla(
     kapak_basi, hata = _mentese_kapak_basi(cfg, kapak_yukseklik)
     if hata:
         return _hata([hata])
+    vida_adet, hata = _govde_vida_birlesim(cfg, dis_derinlik)
+    if hata:
+        return _hata([hata])
+    birlesim_sayisi, vida_toplam = _govde_vida_toplam(cfg, dis_genislik, dis_yukseklik, dis_derinlik)
     mentese_adedi = kapak_basi * kapak_adedi
     return {
         "hazir": True,
@@ -885,11 +981,25 @@ def hirdavat_hesapla(
             },
             {"ad": "minifiks", "birlesim_adet": _temiz(cfg.minifiks_birlesim)},
             {
-                "ad": "konfirmat",
-                "cap": _temiz(cfg.konfirmat_cap),
-                "boy": _temiz(cfg.konfirmat_boy),
-                "birlesim_adet": _temiz(cfg.konfirmat_birlesim),
+                "ad": "govde_vidasi",
+                "kullanim": "govde_imalat",
+                "cap": _temiz(cfg.govde_vida_cap),
+                "boy": _temiz(cfg.govde_vida_boy),
+                "birlesim_derinligi": _temiz(dis_derinlik),
+                "birlesim_adet": _temiz(vida_adet),
+                "birlesim_sayisi": birlesim_sayisi,
+                "toplam_adet": _temiz(vida_toplam),
             },
         ],
+        "vida_turleri": {
+            "govde_imalat": {
+                "cap": _temiz(cfg.govde_vida_cap),
+                "boy": _temiz(cfg.govde_vida_boy),
+            },
+            "aski_duvar_montaj": {
+                "cap": _temiz(cfg.duvar_montaj_vida_cap),
+                "boy": _temiz(cfg.duvar_montaj_vida_boy),
+            },
+        },
         "parcalar": [],
     }
